@@ -35,7 +35,7 @@ export async function runInvestigation(args: {
   // Re-fetch the bundle for evidence building (syncDeal already normalized+persisted stage/contacts).
   const g8Bundle = await provider.getDealBundle(graph8DealId);
   const evidenceBundle = buildEvidenceBundle(g8Bundle);
-  const extractor = getExtractor();
+  const extractor = getExtractor(graph8DealId);
 
   await prisma.dealAnalysis.updateMany({
     where: { organizationId, dealId: deal.id, isCurrent: true },
