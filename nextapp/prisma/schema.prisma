@@ -1,0 +1,493 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  rev_leader
+  manager
+  rep
+  read_only
+}
+
+enum ConnectionMode {
+  demo
+  live
+}
+
+enum ConnectionStatus {
+  not_configured
+  connected
+  error
+}
+
+enum WebhookProcessingStatus {
+  pending
+  processing
+  completed
+  failed
+  retrying
+}
+
+enum DealOutcome {
+  open
+  won
+  lost
+}
+
+enum DealSegment {
+  enterprise
+  mid_market
+  smb
+}
+
+enum ContactRole {
+  champion
+  decision_maker
+  influencer
+  blocker
+  coach
+  end_user
+  unknown
+}
+
+enum EvidenceSourceType {
+  meeting
+  transcript
+  deal_activity
+  note
+  close_reason
+  stakeholder_data
+  salesperson_confirmation
+  other
+}
+
+enum EvidenceStrength {
+  weak
+  moderate
+  strong
+}
+
+enum ConfidenceLevel {
+  high
+  medium
+  low
+  unknown
+}
+
+enum AnalysisStatus {
+  pending
+  processing
+  completed
+  needs_clarification
+  failed
+}
+
+enum FactorCategory {
+  product_capability_gap
+  integration_gap
+  pricing
+  packaging
+  competitor
+  security
+  compliance
+  privacy
+  legal
+  implementation
+  support
+  wrong_fit
+  missing_decision_maker
+  weak_champion
+  stakeholder_misalignment
+  poor_discovery
+  poor_demo
+  slow_followup
+  proposal_delay
+  communication
+  value_not_proven
+  roi_not_proven
+  timing
+  budget
+  priority_change
+  buyer_project_cancelled
+  procurement
+  internal_seller_delay
+  unknown
+  other
+}
+
+enum FactorType {
+  primary
+  secondary
+}
+
+enum Preventability {
+  preventable
+  potentially_preventable
+  not_preventable
+  unknown
+}
+
+enum Department {
+  sales
+  sales_engineering
+  product
+  engineering
+  pricing
+  finance
+  security
+  compliance
+  privacy
+  legal
+  operations
+  implementation
+  leadership
+}
+
+enum PatternStrength {
+  one_off
+  emerging_pattern
+  recurring_pattern
+  strong_pattern
+}
+
+enum PatternStatus {
+  active
+  resolved
+}
+
+model Organization {
+  id               String            @id @default(uuid())
+  name             String
+  createdAt        DateTime          @default(now()) @map("created_at")
+  users            User[]
+  graph8Connection Graph8Connection?
+
+  @@map("organizations")
+}
+
+model User {
+  id             String       @id @default(uuid())
+  organizationId String       @map("organization_id")
+  email          String       @unique
+  name           String
+  role           UserRole     @default(rep)
+  hashedPassword String       @map("hashed_password")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@map("users")
+}
+
+model Graph8Connection {
+  id                  String           @id @default(uuid())
+  organizationId      String           @unique @map("organization_id")
+  mode                ConnectionMode   @default(demo)
+  status              ConnectionStatus @default(not_configured)
+  encryptedApiKeyRef  String?          @map("encrypted_api_key_ref")
+  graph8OrgId         String?          @map("graph8_org_id")
+  lastSyncAt          String?          @map("last_sync_at")
+  createdAt           DateTime         @default(now()) @map("created_at")
+  organization        Organization     @relation(fields: [organizationId], references: [id])
+
+  @@map("graph8_connections")
+}
+
+model Deal {
+  id             String    @id @default(uuid())
+  organizationId String    @map("organization_id")
+  graph8DealId   String    @map("graph8_deal_id")
+  name           String
+  companyName    String    @map("company_name")
+  industry       String
+  segment        DealSegment
+  amount         Decimal   @db.Decimal(14, 2)
+  currency       String    @default("USD")
+  pipelineId     String?   @map("pipeline_id")
+  stageId        String?   @map("stage_id")
+  stageName      String?   @map("stage_name")
+  ownerName      String?   @map("owner_name")
+  outcome        DealOutcome @default(open)
+  closeReasonRaw String?   @map("close_reason_raw")
+  openedAt       DateTime? @map("opened_at")
+  closedAt       DateTime? @map("closed_at")
+  syncedAt       DateTime  @map("synced_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  stageSnapshots DealSnapshot[]
+  contacts       DealContact[]
+
+  @@index([organizationId])
+  @@index([graph8DealId])
+  @@index([segment])
+  @@index([outcome])
+  @@map("deals")
+}
+
+model DealSnapshot {
+  id         String    @id @default(uuid())
+  dealId     String    @map("deal_id")
+  stageId    String    @map("stage_id")
+  stageName  String    @map("stage_name")
+  enteredAt  DateTime  @map("entered_at")
+  exitedAt   DateTime? @map("exited_at")
+  deal       Deal      @relation(fields: [dealId], references: [id])
+
+  @@index([dealId])
+  @@map("deal_snapshots")
+}
+
+model DealContact {
+  id         String      @id @default(uuid())
+  dealId     String      @map("deal_id")
+  name       String
+  title      String?
+  role       ContactRole @default(unknown)
+  engagedAt  DateTime?   @map("engaged_at")
+  deal       Deal        @relation(fields: [dealId], references: [id])
+
+  @@index([dealId])
+  @@map("deal_contacts")
+}
+
+model DealAnalysis {
+  id                       String          @id @default(uuid())
+  organizationId           String          @map("organization_id")
+  dealId                   String          @map("deal_id")
+  analysisVersion          Int             @default(1) @map("analysis_version")
+  promptVersion            String          @map("prompt_version")
+  modelIdentifier          String          @map("model_identifier")
+  taxonomyVersion          String          @map("taxonomy_version")
+  outcome                  String
+  summary                  String
+  primaryFactorId          String?         @map("primary_factor_id")
+  confidence               ConfidenceLevel @default(unknown)
+  humanConfirmationRequired Boolean        @default(false) @map("human_confirmation_required")
+  status                   AnalysisStatus  @default(pending)
+  isCurrent                Boolean         @default(true) @map("is_current")
+  completedAt              DateTime?       @map("completed_at")
+  createdAt                DateTime        @default(now()) @map("created_at")
+
+  factors DealFactor[] @relation("AnalysisFactors")
+
+  @@index([organizationId])
+  @@index([dealId])
+  @@index([status])
+  @@index([isCurrent])
+  @@map("deal_analyses")
+}
+
+model DealFactor {
+  id               String          @id @default(uuid())
+  organizationId   String          @map("organization_id")
+  dealAnalysisId   String          @map("deal_analysis_id")
+  category         FactorCategory
+  specificIssue    String          @map("specific_issue")
+  factorType       FactorType      @map("factor_type")
+  confidence       ConfidenceLevel @default(unknown)
+  preventability   Preventability  @default(unknown)
+  department       Department
+  isPrimary        Boolean         @default(false) @map("is_primary")
+
+  analysis DealAnalysis  @relation("AnalysisFactors", fields: [dealAnalysisId], references: [id])
+  evidence DealEvidence[]
+
+  @@index([organizationId])
+  @@index([dealAnalysisId])
+  @@index([category])
+  @@map("deal_factors")
+}
+
+model DealEvidence {
+  id                 String              @id @default(uuid())
+  organizationId     String              @map("organization_id")
+  dealId             String              @map("deal_id")
+  analysisId         String?             @map("analysis_id")
+  factorId           String?             @map("factor_id")
+  sourceType         EvidenceSourceType  @map("source_type")
+  sourceExternalId   String?             @map("source_external_id")
+  sourceTimestamp    DateTime?           @map("source_timestamp")
+  finding            String
+  excerpt            String?
+  strength           EvidenceStrength    @default(moderate)
+  createdAt          DateTime            @default(now()) @map("created_at")
+
+  factor DealFactor? @relation(fields: [factorId], references: [id])
+
+  @@index([organizationId])
+  @@index([dealId])
+  @@index([analysisId])
+  @@index([factorId])
+  @@map("deal_evidence")
+}
+
+model HumanFeedback {
+  id                     String          @id @default(uuid())
+  organizationId         String          @map("organization_id")
+  dealId                 String          @map("deal_id")
+  analysisId             String          @map("analysis_id")
+  userId                 String?         @map("user_id")
+  feedbackType           String          @map("feedback_type")
+  selectedReason         String?         @map("selected_reason")
+  overrideCategory       FactorCategory? @map("override_category")
+  wasSellerControllable  Boolean?        @map("was_seller_controllable")
+  anotherVendorSelected  Boolean?        @map("another_vendor_selected")
+  comment                String?
+  createdAt              DateTime        @default(now()) @map("created_at")
+
+  @@index([organizationId])
+  @@index([dealId])
+  @@index([analysisId])
+  @@map("human_feedback")
+}
+
+model Pattern {
+  id               String          @id @default(uuid())
+  organizationId   String          @map("organization_id")
+  name             String
+  category         FactorCategory
+  segmentDefinition Json           @map("segment_definition")
+  lostCount        Int             @default(0) @map("lost_count")
+  wonCount         Int             @default(0) @map("won_count")
+  sampleSize       Int             @default(0) @map("sample_size")
+  patternStrength  PatternStrength @default(one_off) @map("pattern_strength")
+  confidence       ConfidenceLevel @default(low)
+  status           PatternStatus   @default(active)
+  narrative        String
+  firstDetectedAt  DateTime        @map("first_detected_at")
+  lastDetectedAt   DateTime        @map("last_detected_at")
+  createdAt        DateTime        @default(now()) @map("created_at")
+
+  occurrences     PatternOccurrence[]
+  recommendations Recommendation[]
+
+  @@index([organizationId])
+  @@index([category])
+  @@index([status])
+  @@map("patterns")
+}
+
+model PatternOccurrence {
+  id            String  @id @default(uuid())
+  patternId     String  @map("pattern_id")
+  dealId        String  @map("deal_id")
+  dealFactorId  String? @map("deal_factor_id")
+  outcome       String
+
+  pattern Pattern @relation(fields: [patternId], references: [id])
+
+  @@index([patternId])
+  @@index([dealId])
+  @@map("pattern_occurrences")
+}
+
+model Recommendation {
+  id                String   @id @default(uuid())
+  organizationId    String   @map("organization_id")
+  patternId         String   @map("pattern_id")
+  department        Department
+  title             String
+  explanation       String
+  recommendedAction String   @map("recommended_action")
+  priority          String   @default("medium")
+  status            String   @default("proposed")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  pattern Pattern                 @relation(fields: [patternId], references: [id])
+  actions RecommendationAction[]
+
+  @@index([organizationId])
+  @@index([patternId])
+  @@index([department])
+  @@index([status])
+  @@map("recommendations")
+}
+
+model RecommendationAction {
+  id                 String    @id @default(uuid())
+  recommendationId   String    @map("recommendation_id")
+  actionType         String    @map("action_type")
+  status             String    @default("proposed")
+  approvedByUserId   String?   @map("approved_by_user_id")
+  approvedAt         DateTime? @map("approved_at")
+  graph8ObjectType   String?   @map("graph8_object_type")
+  graph8ObjectId     String?   @map("graph8_object_id")
+  error              String?
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  recommendation Recommendation @relation(fields: [recommendationId], references: [id])
+
+  @@index([recommendationId])
+  @@index([status])
+  @@map("recommendation_actions")
+}
+
+model FutureDealWarning {
+  id              String   @id @default(uuid())
+  organizationId  String   @map("organization_id")
+  dealId          String   @map("deal_id")
+  patternId       String   @map("pattern_id")
+  explanation     String
+  similarityBasis Json     @map("similarity_basis")
+  status          String   @default("open")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@index([organizationId])
+  @@index([dealId])
+  @@index([patternId])
+  @@index([status])
+  @@map("future_deal_warnings")
+}
+
+model WebhookEvent {
+  id                 String                   @id @default(uuid())
+  organizationId     String                   @map("organization_id")
+  externalEventId    String                   @map("external_event_id")
+  eventType          String                   @map("event_type")
+  graph8DealId       String                   @map("graph8_deal_id")
+  payload            Json
+  receivedAt         DateTime                 @map("received_at")
+  processingStatus   WebhookProcessingStatus  @default(pending) @map("processing_status")
+  attempts           Int                      @default(0)
+  error              String?
+  createdAt          DateTime                 @default(now()) @map("created_at")
+
+  @@unique([organizationId, externalEventId], name: "uq_org_external_event")
+  @@index([externalEventId])
+  @@index([graph8DealId])
+  @@index([processingStatus])
+  @@map("webhook_events")
+}
+
+model AgentRun {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  userId         String?  @map("user_id")
+  question       String
+  answer         String
+  toolsUsed      Json     @default("{}") @map("tools_used")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([organizationId])
+  @@map("agent_runs")
+}
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  organizationId String   @map("organization_id")
+  actorUserId    String?  @map("actor_user_id")
+  action         String
+  entityType     String   @map("entity_type")
+  entityId       String   @map("entity_id")
+  logMetadata    Json     @default("{}") @map("log_metadata")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([organizationId])
+  @@map("audit_logs")
+}
