@@ -62,20 +62,24 @@ export class LiveGraph8Provider implements Graph8Provider {
     throw new Graph8RateLimitError("Graph8 API rate limit exceeded after retries");
   }
 
-  private async companyIndustryAndSegment(companyId: string | number | null | undefined): Promise<[string, string]> {
-    if (!companyId) return ["Unknown", "mid_market"];
+  rememberOutcome(graph8DealId: string, outcome: string) {
+    this.knownOutcomes.set(String(graph8DealId), outcome);
+  }
+
+  private async companyIndustryAndSegment(companyId: string | number | null | undefined): Promise<[string, string, string]> {
+    if (!companyId) return ["Unknown", "mid_market", ""];
     try {
       const payload = (await this.get(`/companies/${companyId}`)).data || {};
       const industry = payload.industry || payload.company_industry || payload.industries?.[0] || "Unknown";
       const employees = payload.employee_count ?? payload.employees ?? payload.company_employee_count ?? payload.employee_range ?? payload.size;
-      return [String(industry), inferSegment(employees)];
+      return [String(industry), inferSegment(employees), String(payload.name || "")];
     } catch {
-      return ["Unknown", "mid_market"];
+      return ["Unknown", "mid_market", ""];
     }
   }
 
   private async parseDeal(payload: any, outcomeHint?: string): Promise<G8Deal> {
-    const [industry, segment] = await this.companyIndustryAndSegment(payload.company_id);
+    const [industry, segment, companyName] = await this.companyIndustryAndSegment(payload.company_id);
 
     const closedLostReason = payload.closed_lost_reason;
     const closeDate = parseDt(payload.close_date);
@@ -92,7 +96,7 @@ export class LiveGraph8Provider implements Graph8Provider {
     return {
       externalId: String(payload.id),
       name: payload.name || "",
-      companyName: payload.company_name || "",
+      companyName: payload.company_name || companyName || "",
       industry,
       segment,
       amount: Number(payload.amount || 0),

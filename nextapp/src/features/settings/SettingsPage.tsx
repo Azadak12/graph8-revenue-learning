@@ -35,15 +35,27 @@ export function SettingsPage() {
   }
 
   async function syncDeals() {
+    const url = "/api/settings/graph8-sync";
     setSyncing(true);
-    setSyncMessage(null);
+    setSyncMessage("Reading deals from Graph8...");
     try {
-      const res = await api.post<{ closed: number; active: number; analyzed: number; failed: number }>(
-        "/api/settings/graph8-sync"
-      );
+      const start = await api.post<{ closed: Array<{ id: string; outcome: string }>; active: number }>(url, { step: "start" });
+      const total = start.closed.length;
+      let analyzed = 0;
+      let failed = 0;
+      const BATCH = 4;
+      for (let i = 0; i < total; i += BATCH) {
+        setSyncMessage(`Analyzing deals ${i + 1}-${Math.min(i + BATCH, total)} of ${total}...`);
+        const res = await api.post<{ analyzed: number; failed: number }>(url, { step: "analyze", deals: start.closed.slice(i, i + BATCH) });
+        analyzed += res.analyzed;
+        failed += res.failed;
+      }
+      setSyncMessage("Building learnings and recommendations...");
+      const fin = await api.post<{ patterns: number; recommendations: number; warnings: number }>(url, { step: "finish" });
       setSyncMessage(
-        `Imported ${res.closed} closed and ${res.active} open deals from Graph8. ${res.analyzed} analyzed` +
-          (res.failed ? `, ${res.failed} failed.` : ".")
+        `Imported ${total} closed and ${start.active} open deals from Graph8. ${analyzed} analyzed` +
+          (failed ? `, ${failed} failed` : "") +
+          `. Found ${fin.patterns} learnings, ${fin.recommendations} recommendations, ${fin.warnings} open-deal warnings.`
       );
       load();
     } catch (err) {

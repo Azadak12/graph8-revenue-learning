@@ -3,7 +3,6 @@
  * refreshes patterns, recommendations and open-deal warnings once. */
 import { prisma } from "../../db";
 import type { Graph8Provider } from "./base";
-import { syncDeal } from "./sync";
 import { runInvestigation } from "../investigations/orchestrator";
 import { refreshPatternsForSegment } from "../patterns/engine";
 import { refreshRecommendations } from "../recommendations/engine";
@@ -37,30 +36,44 @@ export async function clearOrgDealData(organizationId: string) {
   ]);
 }
 
-export async function syncOrgFromGraph8(organizationId: string, provider: Graph8Provider) {
+/** Step 1: read the deal lists from Graph8, then replace the org's deal data.
+ * Sync runs in three short requests (start, analyze in batches, finish) so
+ * each stays within the serverless time limit. */
+export async function startLiveSync(organizationId: string, provider: Graph8Provider) {
   const closed = await provider.listClosedDeals();
   const active = await provider.listActiveDeals();
-
   await clearOrgDealData(organizationId);
+  return {
+    closed: closed.map((d) => ({ id: d.externalId, outcome: d.outcome })),
+    active: active.length,
+  };
+}
 
-  // Analyze a few deals at a time so a full sync fits in one serverless request.
+/** Step 2: analyze a small batch of closed deals. */
+export async function analyzeLiveDeals(
+  organizationId: string,
+  provider: Graph8Provider,
+  deals: Array<{ id: string; outcome: string }>
+) {
   let analyzed = 0;
   let failed = 0;
-  const CONCURRENCY = 5;
-  for (let i = 0; i < closed.length; i += CONCURRENCY) {
-    await Promise.all(
-      closed.slice(i, i + CONCURRENCY).map(async (g8Deal) => {
-        try {
-          await runInvestigation({ organizationId, provider, graph8DealId: g8Deal.externalId, skipRefresh: true });
-          analyzed++;
-        } catch (err) {
-          failed++;
-          logger.exception("live_sync_deal_failed", err, { graph8DealId: g8Deal.externalId });
-        }
-      })
-    );
-  }
+  await Promise.all(
+    deals.map(async ({ id, outcome }) => {
+      provider.rememberOutcome?.(id, outcome);
+      try {
+        await runInvestigation({ organizationId, provider, graph8DealId: id, skipRefresh: true });
+        analyzed++;
+      } catch (err) {
+        failed++;
+        logger.exception("live_sync_deal_failed", err, { graph8DealId: id });
+      }
+    })
+  );
+  return { analyzed, failed };
+}
 
+/** Step 3: build patterns, recommendations and open-deal warnings once. */
+export async function finishLiveSync(organizationId: string, provider: Graph8Provider) {
   const segments = await prisma.deal.findMany({
     where: { organizationId },
     select: { industry: true, segment: true },
@@ -77,5 +90,9 @@ export async function syncOrgFromGraph8(organizationId: string, provider: Graph8
     data: { lastSyncAt: new Date().toISOString() },
   });
 
-  return { closed: closed.length, active: active.length, analyzed, failed };
+  return {
+    patterns: await prisma.pattern.count({ where: { organizationId } }),
+    recommendations: await prisma.recommendation.count({ where: { organizationId } }),
+    warnings: await prisma.futureDealWarning.count({ where: { organizationId } }),
+  };
 }
