@@ -26,23 +26,54 @@ export async function createAccessToken(userId: string, organizationId: string):
 
 export class UnauthorizedError extends Error {}
 
+const DEFAULT_ORG_NAME = "Acme Revenue Team (Demo)";
+const DEFAULT_USER_EMAIL = "demo@graph8.com";
+
+/** Login has been removed for this deployment: every request is treated as
+ * the single default demo user, auto-provisioned on first use. If a valid
+ * Bearer token is still presented (e.g. from an older client), it's honored;
+ * otherwise this falls back to the default user rather than rejecting the
+ * request. */
+async function getOrCreateDefaultUser(): Promise<User> {
+  let user = await prisma.user.findUnique({ where: { email: DEFAULT_USER_EMAIL } });
+  if (user) return user;
+
+  let org = await prisma.organization.findFirst({ where: { name: DEFAULT_ORG_NAME } });
+  if (!org) {
+    org = await prisma.organization.create({ data: { name: DEFAULT_ORG_NAME } });
+  }
+  const connection = await prisma.graph8Connection.findUnique({ where: { organizationId: org.id } });
+  if (!connection) {
+    await prisma.graph8Connection.create({
+      data: { organizationId: org.id, mode: "demo", status: "connected" },
+    });
+  }
+
+  user = await prisma.user.create({
+    data: {
+      organizationId: org.id,
+      email: DEFAULT_USER_EMAIL,
+      name: "Demo Admin",
+      role: "admin",
+      hashedPassword: await hashPassword("demo1234"),
+    },
+  });
+  return user;
+}
+
 export async function getCurrentUser(request: NextRequest): Promise<User> {
   const authHeader = request.headers.get("authorization");
-  if (!authHeader?.startsWith("Bearer ")) {
-    throw new UnauthorizedError("Not authenticated");
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.slice("Bearer ".length);
+    try {
+      const { payload } = await jwtVerify(token, secretKey());
+      if (payload.sub) {
+        const user = await prisma.user.findUnique({ where: { id: payload.sub } });
+        if (user) return user;
+      }
+    } catch {
+      // fall through to the default demo user
+    }
   }
-  const token = authHeader.slice("Bearer ".length);
-
-  let userId: string | undefined;
-  try {
-    const { payload } = await jwtVerify(token, secretKey());
-    userId = payload.sub;
-  } catch {
-    throw new UnauthorizedError("Invalid token");
-  }
-  if (!userId) throw new UnauthorizedError("Invalid token");
-
-  const user = await prisma.user.findUnique({ where: { id: userId } });
-  if (!user) throw new UnauthorizedError("User not found");
-  return user;
+  return getOrCreateDefaultUser();
 }

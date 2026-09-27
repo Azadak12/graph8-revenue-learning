@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./hooks/useAuth";
 import { ThemeProvider } from "./hooks/useTheme";
 import { Layout } from "./components/Layout";
-import { LoginPage } from "./features/auth/LoginPage";
 import { OverviewPage } from "./features/overview/OverviewPage";
 import { DealsListPage } from "./features/deals/DealsListPage";
 import { DealDetailPage } from "./features/deals/DealDetailPage";
@@ -12,27 +11,28 @@ import { RecommendationsPage } from "./features/recommendations/RecommendationsP
 import { AgentPage } from "./features/agent/AgentPage";
 import { SettingsPage } from "./features/settings/SettingsPage";
 
-function RequireAuth({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+// Login has been removed: the backend treats every request as a single
+// default demo user (see nextapp/lib/auth.ts), so this just waits for that
+// user to resolve before rendering the app shell.
+function WaitForUser({ children }: { children: React.ReactNode }) {
+  const { loading } = useAuth();
   if (loading)
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 text-slate-400 dark:bg-slate-950">
         Loading...
       </div>
     );
-  if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
       <Route
         element={
-          <RequireAuth>
+          <WaitForUser>
             <Layout />
-          </RequireAuth>
+          </WaitForUser>
         }
       >
         <Route index element={<Navigate to="/overview" replace />} />

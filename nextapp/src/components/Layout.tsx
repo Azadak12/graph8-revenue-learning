@@ -52,7 +52,7 @@ function CloseIcon() {
 }
 
 export function Layout() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { theme, toggle } = useTheme();
   const [connectionMode, setConnectionMode] = useState<string | null>(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -104,12 +104,6 @@ export function Layout() {
         </button>
         <div className="px-2 text-sm font-medium text-ink dark:text-slate-100">{user?.name}</div>
         <div className="px-2 text-xs text-slate-400 dark:text-slate-500">{user?.email}</div>
-        <button
-          onClick={logout}
-          className="mt-3 w-full rounded-lg px-3 py-2 text-left text-sm text-slate-500 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800"
-        >
-          Sign out
-        </button>
       </div>
     </>
   );
