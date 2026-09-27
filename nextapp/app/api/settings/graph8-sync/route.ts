@@ -17,7 +17,11 @@ export async function POST(request: NextRequest) {
     }
     const provider = await getProviderForOrg(user.organizationId);
     const body = await request.json().catch(() => ({}));
-    const step = body?.step || "start";
+    const step = body?.step;
+    if (!["start", "analyze", "finish"].includes(step)) {
+      // An out-of-date page calling without a step would clear the data and stop.
+      return jsonError(409, "This page is out of date. Press Cmd + Shift + R (Ctrl + Shift + R on Windows) and click Sync again.");
+    }
     let result;
     try {
       if (step === "analyze") {
