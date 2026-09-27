@@ -61,22 +61,6 @@ function idOf(obj) {
   return undefined;
 }
 const asInt = (v) => (v != null && /^\d+$/.test(String(v)) ? Number(v) : v);
-// Finds a Graph8 user id inside any response (e.g. who created a record).
-const USER_KEYS = ["user_id", "owner_id", "created_by", "created_by_id", "creator_id", "author_id", "assignee_id"];
-function findUserId(obj, depth = 0) {
-  if (!obj || typeof obj !== "object" || depth > 5) return null;
-  if (Array.isArray(obj)) {
-    for (const x of obj) { const f = findUserId(x, depth + 1); if (f) return f; }
-    return null;
-  }
-  for (const k of USER_KEYS) {
-    const v = obj[k];
-    if ((typeof v === "string" && v.length > 3 && !v.includes("@")) || typeof v === "number") return String(v);
-    if (v && typeof v === "object" && v.id) return String(v.id);
-  }
-  for (const v of Object.values(obj)) { const f = findUserId(v, depth + 1); if (f) return f; }
-  return null;
-}
 const daysAgo = (n) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "");
 const asList = (d) => (Array.isArray(d) ? d : d?.items || d?.data || d?.pipelines || d?.reasons || d?.users || d?.members || []);
@@ -127,36 +111,40 @@ report.pipeline = { found: !!pipeline, stages: stages.map(stageName), won_stage:
 console.log(pipeline ? `   pipeline "${pipeline.name}" with stages: ${stages.map(stageName).join(", ")}` : "   no pipeline available - deals will use Graph8's default");
 
 // ---------------------------------------------------------------- owner
+// Graph8 accepts a team member id, email, or PropelAuth uid as a deal owner.
+// Collect candidates (team-member endpoints first) and let POST /deals decide.
 console.log("3) Finding your Graph8 user id (deal owner)...");
-let ownerId = process.env.GRAPH8_OWNER_ID || null;
-const userListRe = /(^|\/)(me|whoami|profile|current[-_]?user|self|users|members|team[-_]?members|teammates|owners|seats)$/i;
+const ownerCandidates = [];
+const addOwner = (v) => {
+  if (v == null || v === "") return;
+  const val = String(v);
+  if (!ownerCandidates.includes(val)) ownerCandidates.push(val);
+};
+addOwner(process.env.GRAPH8_OWNER_ID);
+addOwner(process.env.GRAPH8_OWNER_EMAIL);
+const rank = (p) =>
+  /team[-_]?members\/me$/.test(p) ? 0 : /team[-_]?members$/.test(p) ? 1 : /^\/(me|users\/me|auth\/me|members)$/.test(p) ? 2 : /^\/users$/.test(p) ? 3 : 9;
 const ownerPaths = [...new Set([
-  ...specPaths.filter((p) => !p.includes("{") && userListRe.test(p) && (spec.paths[p]?.get || spec.paths["/api/v1" + p]?.get)),
-  "/me", "/users/me", "/auth/me", "/users", "/members", "/deals/owners", "/owners",
-])];
+  "/team-members/me", "/team-members", "/me", "/users/me", "/auth/me", "/members", "/users",
+  ...specPaths.filter((p) => !p.includes("{") && /(^|\/)(me|team[-_]?members|members|users)$/i.test(p) && (spec.paths[p]?.get || spec.paths["/api/v1" + p]?.get)),
+])].filter((p) => rank(p) < 9).sort((x, y) => rank(x) - rank(y));
 report.owner_candidate_paths = ownerPaths;
-if (!ownerId) {
-  for (const path of ownerPaths) {
-    const r = await call("GET", path, undefined, { quiet: true });
-    if (!r.ok) continue;
-    const d = dataOf(r);
-    const list = asList(d);
-    const obj = list.length ? list[0] : d?.user || d;
-    const id = obj?.user_id ?? obj?.id ?? findUserId(d);
-    if (id) { ownerId = String(id); console.log(`   found via GET ${path}`); break; }
+for (const path of ownerPaths) {
+  const r = await call("GET", path, undefined, { quiet: true });
+  if (!r.ok) continue;
+  const d = dataOf(r);
+  const list = asList(d);
+  for (const obj of (list.length ? list.slice(0, 3) : [d?.member || d?.user || d, d])) {
+    if (!obj || typeof obj !== "object") continue;
+    for (const k of ["member_id", "id", "propelauth_uid", "propel_auth_uid", "auth_uid", "uid", "user_id", "email"]) addOwner(obj[k]);
+    if (obj.user && typeof obj.user === "object") for (const k of ["id", "email"]) addOwner(obj.user[k]);
   }
+  if (ownerCandidates.length) console.log(`   candidates from GET ${path}`);
 }
-if (!ownerId) {
-  const pl = await call("GET", "/deals/pipelines", undefined, { quiet: true });
-  ownerId = findUserId(dataOf(pl));
-  if (ownerId) console.log("   found as the creator of the pipeline");
-}
-if (!ownerId) {
-  const t = await call("GET", "/tasks?limit=5", undefined, { quiet: true });
-  ownerId = findUserId(dataOf(t));
-  if (ownerId) console.log("   found as the creator of an existing task");
-}
-console.log(ownerId ? `   owner id: ${ownerId}` : "   not found yet - will look for it on the first company created");
+let ownerIdx = 0;
+let ownerId = ownerCandidates[0] || null;
+report.owner_candidates = ownerCandidates.length;
+console.log(ownerCandidates.length ? `   ${ownerCandidates.length} owner candidate(s) found` : "   none found - set GRAPH8_OWNER_EMAIL=your_graph8_login_email");
 
 // ---------------------------------------------------------------- close reasons
 const reasonsR = await call("GET", "/deals/close-reasons", undefined, { quiet: true });
@@ -245,12 +233,6 @@ for (const d of all) {
     companyId = idOf(asList(dataOf(r))[0]);
   }
   row.company = !!companyId;
-  if (!ownerId) ownerId = findUserId(dataOf(r));
-  if (!ownerId && companyId) {
-    const note = await call("POST", `/companies/${companyId}/notes`, { content: "Sample account created for the Revenue Learning demo." }, { quiet: true });
-    ownerId = findUserId(dataOf(note));
-    if (ownerId) console.log(`   owner id found from a company note: ${ownerId}`);
-  }
 
   // Contacts
   const contactIds = [];
@@ -284,11 +266,20 @@ for (const d of all) {
     { ...dealBody, stage_id: undefined, pipeline_id: undefined, company_id: undefined },
   ];
   let dealId;
-  for (const body of variants) {
-    r = await call("POST", "/deals", body, { quiet: true });
-    dealId = idOf(dataOf(r));
-    if (dealId || r.status === 409) break;
+  outer: for (const body of variants) {
+    for (;;) {
+      r = await call("POST", "/deals", { ...body, owner_id: ownerId || undefined }, { quiet: true });
+      dealId = idOf(dataOf(r));
+      if (dealId || r.status === 409) break outer;
+      // Wrong owner value: try the next candidate with the same body.
+      if (/owner/i.test(JSON.stringify(r.body || "")) && ownerIdx < ownerCandidates.length - 1) {
+        ownerId = ownerCandidates[++ownerIdx];
+        continue;
+      }
+      break;
+    }
   }
+  if (dealId && !report.owner_used) { report.owner_used = true; console.log(`   deal owner accepted (candidate ${ownerIdx + 1})`); }
   if (!dealId && r.status === 409) {
     const s = await call("GET", `/deals?search=${encodeURIComponent(d.name)}&limit=1`, undefined, { quiet: true });
     dealId = idOf(asList(dataOf(s))[0]);
@@ -302,7 +293,7 @@ for (const d of all) {
       console.log(`   owner id: ${ownerId || "NOT FOUND"} | company created: ${!!companyId} | contacts created: ${contactIds.length}/${(d.contacts || []).length}`);
       if (row.contact_error) console.log(`   contact error: ${JSON.stringify(row.contact_error).slice(0, 600)}`);
       console.log(`   deal error: ${JSON.stringify(r.body).slice(0, 900)}`);
-      console.log(`   user-related endpoints: ${ownerPaths.slice(0, 15).join(", ")}`);
+      console.log(`   owner candidates tried: ${ownerIdx + 1}/${ownerCandidates.length} | endpoints: ${ownerPaths.join(", ")}`);
       save();
       break;
     }
