@@ -117,6 +117,8 @@ export function groundTruthFor(externalId: string, dealName?: string | null): Ra
   const deals = [...CLOSED_DEALS, ...ACTIVE_DEALS];
   // Sample deals loaded into a Graph8 workspace by scripts/graph8-seed.mjs come
   // back with Graph8's ids, so also match them by their unique deal name.
-  const raw = deals.find((d) => d.external_id === externalId) || (dealName ? deals.find((d) => d.name === dealName) : undefined);
+  const raw =
+    deals.find((d) => d.external_id === externalId) ||
+    (dealName ? deals.find((d) => d.name === dealName) || deals.find((d) => dealName.startsWith(d.company_name)) : undefined);
   return raw?.ground_truth;
 }
