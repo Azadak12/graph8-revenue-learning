@@ -23,13 +23,19 @@ function inferSegment(employeeCount: string | null | undefined): string {
   return "mid_market";
 }
 
+/** Strips what often gets pasted along with a key: whitespace, line breaks,
+ * quotes and a leading "Bearer". */
+export function cleanApiKey(raw: string): string {
+  return raw.replace(/\s+/g, "").replace(/^["']+|["']+$/g, "").replace(/^bearer/i, "");
+}
+
 export class LiveGraph8Provider implements Graph8Provider {
   mode = "live";
   private apiKey: string;
   private baseUrl: string;
 
   constructor(apiKey: string, baseUrl?: string) {
-    this.apiKey = apiKey;
+    this.apiKey = cleanApiKey(apiKey);
     this.baseUrl = baseUrl || settings.graph8BaseUrl;
   }
 
