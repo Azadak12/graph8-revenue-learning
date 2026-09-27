@@ -12,7 +12,7 @@ import { getLogger } from "../../logging";
 
 const logger = getLogger("liveSync");
 
-async function clearOrgDealData(organizationId: string) {
+export async function clearOrgDealData(organizationId: string) {
   const deals = await prisma.deal.findMany({ where: { organizationId }, select: { id: true } });
   const dealIds = deals.map((d) => d.id);
   const patterns = await prisma.pattern.findMany({ where: { organizationId }, select: { id: true } });
