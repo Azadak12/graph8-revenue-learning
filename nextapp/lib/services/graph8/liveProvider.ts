@@ -73,8 +73,12 @@ export class LiveGraph8Provider implements Graph8Provider {
 
     const closedLostReason = payload.closed_lost_reason;
     const closeDate = parseDt(payload.close_date);
+    const stageLabel = String(payload.stage_name || payload.stage || "");
     let outcome: string;
     if (outcomeHint) outcome = outcomeHint;
+    else if (["won", "lost", "open"].includes(payload.outcome)) outcome = payload.outcome;
+    else if (payload.is_closed_won === true || /closed[ _-]?won/i.test(stageLabel)) outcome = "won";
+    else if (payload.is_closed_lost === true || /closed[ _-]?lost/i.test(stageLabel)) outcome = "lost";
     else if (closedLostReason) outcome = "lost";
     else if (closeDate) outcome = "won";
     else outcome = "open";
