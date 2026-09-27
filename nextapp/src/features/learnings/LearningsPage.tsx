@@ -70,7 +70,7 @@ export function LearningsPage() {
       ) : (
         <div className="space-y-4">
           {filtered?.map((p) => (
-            <Link key={p.id} to={`/learnings/${p.id}`}>
+            <Link key={p.id} to={`/learnings/${p.id}`} className="block">
               <Card className="transition hover:border-indigo-200 hover:shadow-md dark:hover:border-indigo-800">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                   <PatternStrengthBadge strength={p.pattern_strength} />

@@ -91,7 +91,7 @@ export function NeedsAttentionSection() {
       <div className="space-y-3">
         {items.map((item) =>
           item.kind === "clarification" ? (
-            <Link key={item.key} to={`/deals/${item.deal.id}`}>
+            <Link key={item.key} to={`/deals/${item.deal.id}`} className="block">
               <div className="flex items-center justify-between gap-4 rounded-xl border border-sky-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-sky-900 dark:bg-slate-900">
                 <div>
                   <div className="font-medium text-ink dark:text-slate-100">
