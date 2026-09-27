@@ -185,6 +185,26 @@ export class LiveGraph8Provider implements Graph8Provider {
     return deals;
   }
 
+  async listDealRefs(): Promise<Array<{ id: string; outcome: string }>> {
+    const refs: Array<{ id: string; outcome: string }> = [];
+    for (const outcome of ["won", "lost", "open"]) {
+      let cursor: string | undefined;
+      for (;;) {
+        const params: Record<string, string | number> = { outcome, limit: 100 };
+        if (cursor) params.cursor = cursor;
+        const payload = await this.get("/deals", params);
+        for (const d of payload.data || []) {
+          this.knownOutcomes.set(String(d.id), outcome);
+          refs.push({ id: String(d.id), outcome });
+        }
+        const pagination = payload.pagination || {};
+        if (!pagination.has_next || !pagination.next_cursor) break;
+        cursor = pagination.next_cursor;
+      }
+    }
+    return refs;
+  }
+
   async listClosedDeals(): Promise<G8Deal[]> {
     return [...(await this.listDealsByOutcome("won")), ...(await this.listDealsByOutcome("lost"))];
   }

@@ -40,16 +40,22 @@ export async function clearOrgDealData(organizationId: string) {
  * Sync runs in three short requests (start, analyze in batches, finish) so
  * each stays within the serverless time limit. */
 export async function startLiveSync(organizationId: string, provider: Graph8Provider) {
-  const closed = await provider.listClosedDeals();
-  const active = await provider.listActiveDeals();
+  let refs: Array<{ id: string; outcome: string }>;
+  if (provider.listDealRefs) {
+    refs = await provider.listDealRefs();
+  } else {
+    const closed = await provider.listClosedDeals();
+    const active = await provider.listActiveDeals();
+    refs = [...closed, ...active].map((d) => ({ id: d.externalId, outcome: d.outcome }));
+  }
   await clearOrgDealData(organizationId);
   return {
-    closed: closed.map((d) => ({ id: d.externalId, outcome: d.outcome })),
-    active: active.length,
+    closed: refs.filter((r) => r.outcome !== "open"),
+    active: refs.filter((r) => r.outcome === "open"),
   };
 }
 
-/** Step 2: analyze a small batch of closed deals. */
+/** Step 2: import a small batch of deals; closed ones are also analyzed. */
 export async function analyzeLiveDeals(
   organizationId: string,
   provider: Graph8Provider,
@@ -83,7 +89,7 @@ export async function finishLiveSync(organizationId: string, provider: Graph8Pro
     await refreshPatternsForSegment({ organizationId, industry, segment });
   }
   await refreshRecommendations({ organizationId });
-  await refreshFutureWarnings({ organizationId, provider });
+  await refreshFutureWarnings({ organizationId, provider, useStoredOpenDeals: true });
 
   await prisma.graph8Connection.update({
     where: { organizationId },

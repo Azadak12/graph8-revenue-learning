@@ -39,21 +39,22 @@ export function SettingsPage() {
     setSyncing(true);
     setSyncMessage("Reading deals from Graph8...");
     try {
-      const start = await api.post<{ closed: Array<{ id: string; outcome: string }>; active: number }>(url, { step: "start" });
-      const total = start.closed.length;
+      const start = await api.post<{ closed: Array<{ id: string; outcome: string }>; active: Array<{ id: string; outcome: string }> }>(url, { step: "start" });
+      const deals = [...start.closed, ...start.active];
+      const total = deals.length;
       let analyzed = 0;
       let failed = 0;
-      const BATCH = 4;
+      const BATCH = 5;
       for (let i = 0; i < total; i += BATCH) {
-        setSyncMessage(`Analyzing deals ${i + 1}-${Math.min(i + BATCH, total)} of ${total}...`);
-        const res = await api.post<{ analyzed: number; failed: number }>(url, { step: "analyze", deals: start.closed.slice(i, i + BATCH) });
+        setSyncMessage(`Importing and analyzing deals ${i + 1}-${Math.min(i + BATCH, total)} of ${total}...`);
+        const res = await api.post<{ analyzed: number; failed: number }>(url, { step: "analyze", deals: deals.slice(i, i + BATCH) });
         analyzed += res.analyzed;
         failed += res.failed;
       }
       setSyncMessage("Building learnings and recommendations...");
       const fin = await api.post<{ patterns: number; recommendations: number; warnings: number }>(url, { step: "finish" });
       setSyncMessage(
-        `Imported ${total} closed and ${start.active} open deals from Graph8. ${analyzed} analyzed` +
+        `Imported ${start.closed.length} closed and ${start.active.length} open deals from Graph8. ${analyzed} processed` +
           (failed ? `, ${failed} failed` : "") +
           `. Found ${fin.patterns} learnings, ${fin.recommendations} recommendations, ${fin.warnings} open-deal warnings.`
       );

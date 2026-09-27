@@ -1,14 +1,17 @@
-// Loads the 22 Revenue Learning sample deals INTO a Graph8 workspace through
-// Graph8's public API: companies, contacts, a pipeline, deals with their
-// buying committee, the deal story as deal notes, and won/lost outcomes.
-// The app then reads them back from Graph8 with "Sync deals from Graph8".
+// Loads sample deals INTO a Graph8 workspace through Graph8's public API:
+// companies (industry, size, city), contacts, deals with their buying
+// committee, meeting and internal notes, a stage path through the pipeline,
+// and won/lost outcomes. The app then reads them back from Graph8 with
+// "Sync deals from Graph8".
 //
-// These are sample deals written into Graph8, not customer history. Run it
-// only against a workspace meant for testing or demos.
+// The deals are fictional sample data written into Graph8, not customer
+// history. Run it only against a workspace meant for testing or demos.
 //
 // Usage (from the nextapp folder):
-//   GRAPH8_API_KEY=your_key node scripts/graph8-seed.mjs
-// Optional: GRAPH8_OWNER_ID=<your Graph8 user id> if the script can't find it.
+//   GRAPH8_API_KEY=your_key node scripts/graph8-seed.mjs          # 77-deal dataset
+//   GRAPH8_API_KEY=your_key node scripts/graph8-seed.mjs demo     # the app's 22 demo stories
+// Optional: GRAPH8_OWNER_EMAIL=<your Graph8 login> if the owner isn't found.
+// Re-running is safe: deals that already exist (same name) are reused.
 //
 // It prints every step and saves graph8-seed-report.json (no secrets in it).
 
@@ -166,8 +169,18 @@ function closeReasonFor(deal) {
 }
 
 // ---------------------------------------------------------------- deals
-const raw = JSON.parse(readFileSync(new URL("../lib/seed/demoDealsData.json", import.meta.url)));
-const all = [...raw.closed, ...raw.active];
+const datasetArg = process.argv[2];
+const datasetUrl =
+  datasetArg === "demo"
+    ? new URL("../lib/seed/demoDealsData.json", import.meta.url)
+    : datasetArg
+      ? new URL(datasetArg, `file://${process.cwd()}/`)
+      : new URL("./data/graph8-sample-deals.json", import.meta.url);
+const raw = JSON.parse(readFileSync(datasetUrl));
+const all = raw.deals || [...(raw.closed || []), ...(raw.active || [])];
+// Pipeline stages a deal walks through before it is closed (side stages like
+// "Long Term Nurture" are skipped).
+const pathStages = openStages.filter((s) => !/nurture|weak|lost|won/i.test(stageName(s)));
 const EMPLOYEES = { enterprise: "5000", mid_market: "500", smb: "50" };
 
 // Discover a dedicated "close deal" endpoint, if Graph8 has one.
@@ -250,12 +263,11 @@ async function markClosed(dealId, d, row) {
   return null;
 }
 
-console.log(`4) Creating ${all.length} deals with companies, contacts and notes...`);
 const results = [];
-for (const d of all) {
+async function seedDeal(d) {
   const row = { name: d.name, outcome: d.outcome };
   results.push(row);
-  const domain = `${slug(d.company_name)}.com`;
+  const domain = d.domain || `${slug(d.company_name)}.com`;
 
   // Already created by an earlier run? Reuse it (no duplicates).
   const found = asList(dataOf(await call("GET", `/deals?search=${encodeURIComponent(d.company_name)}&limit=20`, undefined, { quiet: true })));
@@ -269,12 +281,15 @@ for (const d of all) {
     }
     console.log(`   ok ${d.name} (${d.outcome}${d.outcome !== "open" ? row.closed_via ? ", closed" : ", NOT closed" : ""}) [already in Graph8]`);
     save();
-    continue;
+    return;
   }
 
   // Company
   let companyId = null;
-  let r = await call("POST", "/companies", { domain, name: d.company_name, industry: d.industry, employee_count: EMPLOYEES[d.segment] || "500" }, { quiet: true });
+  let r = await call("POST", "/companies", {
+    domain, name: d.company_name, industry: d.industry,
+    employee_count: d.employee_count || EMPLOYEES[d.segment] || "500", city: d.city, country: d.country,
+  }, { quiet: true });
   companyId = idOf(dataOf(r));
   if (!companyId) {
     r = await call("GET", `/companies?domain=${encodeURIComponent(domain)}&limit=1`, undefined, { quiet: true });
@@ -302,7 +317,7 @@ for (const d of all) {
   row.contacts = contactIds.length;
 
   // Deal
-  const firstStage = openStages.find((s) => stageName(s) === (d.stage_history?.at(-1)?.[0] || "")) || openStages[0];
+  const firstStage = pathStages[0] || openStages[0];
   const dealBody = {
     name: d.name, company_id: companyId ? asInt(companyId) : undefined, amount: d.amount, currency: d.currency,
     pipeline_id: pipeline?.id ?? pipeline?.pipeline_id, stage_id: stageId(firstStage), owner_id: ownerId || undefined,
@@ -343,10 +358,10 @@ for (const d of all) {
       console.log(`   deal error: ${JSON.stringify(r.body).slice(0, 900)}`);
       console.log(`   owner candidates tried: ${ownerIdx + 1}/${ownerCandidates.length} | endpoints: ${ownerPaths.join(", ")}`);
       save();
-      break;
+      return "stop";
     }
     save();
-    continue;
+    return;
   }
   row.deal_id = String(dealId);
 
@@ -359,12 +374,29 @@ for (const d of all) {
     for (const line of dealStory(d)) await call("POST", `/deals/${dealId}/notes`, { content: line }, { quiet: true });
   }
 
+  // Stage path: move the deal forward through the pipeline like a real cycle.
+  if (!row.existing) {
+    const target = Math.min(d.stage_reached ?? 0, pathStages.length - 1);
+    for (let i = 1; i <= target; i++) await call("PATCH", `/deals/${dealId}`, { stage_id: stageId(pathStages[i]) }, { quiet: true });
+  }
+
   // Outcome
   if (d.outcome === "won" || d.outcome === "lost") {
     row.closed_via = await markClosed(dealId, d, row);
   }
   console.log(`   ${row.deal_id ? "ok" : "x"} ${d.name} (${d.outcome}${d.outcome !== "open" ? row.closed_via ? ", closed" : ", NOT closed" : ""})`);
   save();
+}
+
+console.log(`4) Creating ${all.length} deals with companies, contacts, notes and stage history...`);
+// The first deal runs alone (it settles the deal owner); the rest 4 at a time.
+if ((await seedDeal(all[0])) !== "stop") {
+  let next = 1;
+  await Promise.all(
+    Array.from({ length: 4 }, async () => {
+      while (next < all.length) await seedDeal(all[next++]);
+    })
+  );
 }
 
 // ---------------------------------------------------------------- verify
