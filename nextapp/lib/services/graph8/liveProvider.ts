@@ -13,11 +13,12 @@ function parseDt(value: string | null | undefined): Date | null {
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
-function inferSegment(employeeCount: string | null | undefined): string {
-  if (!employeeCount) return "mid_market";
-  const digits = employeeCount.replace(/\D/g, "");
-  if (!digits) return "mid_market";
-  const n = parseInt(digits, 10);
+function inferSegment(employeeCount: unknown): string {
+  if (employeeCount == null || employeeCount === "") return "mid_market";
+  // Accepts 5000, "5000", "5,000" or a range like "1001-5000" (uses the lower bound).
+  const match = String(employeeCount).replace(/,/g, "").match(/\d+/);
+  if (!match) return "mid_market";
+  const n = parseInt(match[0], 10);
   if (n >= 1000) return "enterprise";
   if (n <= 50) return "smb";
   return "mid_market";
@@ -64,8 +65,10 @@ export class LiveGraph8Provider implements Graph8Provider {
   private async companyIndustryAndSegment(companyId: string | number | null | undefined): Promise<[string, string]> {
     if (!companyId) return ["Unknown", "mid_market"];
     try {
-      const payload = (await this.get(`/companies/${companyId}`)).data;
-      return [payload.industry || "Unknown", inferSegment(payload.employee_count)];
+      const payload = (await this.get(`/companies/${companyId}`)).data || {};
+      const industry = payload.industry || payload.company_industry || payload.industries?.[0] || "Unknown";
+      const employees = payload.employee_count ?? payload.employees ?? payload.company_employee_count ?? payload.employee_range ?? payload.size;
+      return [String(industry), inferSegment(employees)];
     } catch {
       return ["Unknown", "mid_market"];
     }
