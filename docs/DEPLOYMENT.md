@@ -31,21 +31,29 @@ for local Docker Compose use (see Option B) — `nextapp/` is additive.
 1. In Vercel: **New Project → Import** this repo.
 2. Set **Root Directory** to `nextapp`.
 3. Framework preset: Next.js (auto-detected).
-4. Add a Postgres database (Vercel Postgres, Neon, or Supabase all work) and
-   set its connection string as `DATABASE_URL`.
+4. **Storage** tab → **Create Database** → Postgres (Neon-backed) → connect it
+   to this project, both Production and Preview environments. This
+   auto-creates `POSTGRES_PRISMA_URL` and `POSTGRES_URL_NON_POOLING` (among
+   others) — `prisma/schema.prisma` reads exactly those two, so nothing
+   further to configure here. (Deploying to a non-Vercel Postgres instead?
+   Set both of those two env vars yourself to the same connection string.)
 5. Add environment variables (see `nextapp/.env.example`):
    - `JWT_SECRET`, `SECRET_ENCRYPTION_KEY` — generate random values
    - `ANTHROPIC_API_KEY` — omit to run the deterministic demo extractor
    - `GRAPH8_API_KEY` / `GRAPH8_WEBHOOK_SECRET` — omit to run in Demo Mode
-6. Deploy.
+6. Deploy (or redeploy, if step 4 happened after an earlier deploy — env var
+   changes only apply to a new deployment).
 7. Run migrations and seed the demo data **once**, from your machine, pointed
-   at the production `DATABASE_URL` (the initial migration is already
-   committed under `nextapp/prisma/migrations/`):
+   at the production database (the initial migration is already committed
+   under `nextapp/prisma/migrations/`). Get the connection string from
+   **Storage → your database → `.env.local` tab** — use the
+   `POSTGRES_URL_NON_POOLING` value for both commands (migrations need a
+   direct, non-pooled connection):
    ```
    cd nextapp
    npm install
-   DATABASE_URL="<your prod connection string>" npx prisma migrate deploy
-   DATABASE_URL="<your prod connection string>" npm run seed
+   POSTGRES_PRISMA_URL="<POSTGRES_URL_NON_POOLING value>" POSTGRES_URL_NON_POOLING="<same value>" npx prisma migrate deploy
+   POSTGRES_PRISMA_URL="<POSTGRES_URL_NON_POOLING value>" POSTGRES_URL_NON_POOLING="<same value>" npm run seed
    ```
 8. Log in with the seeded demo user: `demo@graph8.com` / `demo1234`.
 
