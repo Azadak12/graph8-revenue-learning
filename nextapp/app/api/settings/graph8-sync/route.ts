@@ -3,7 +3,7 @@ import { prisma } from "../../../../lib/db";
 import { getCurrentUser } from "../../../../lib/auth";
 import { jsonError, withErrorHandling } from "../../../../lib/apiHelpers";
 import { getProviderForOrg } from "../../../../lib/services/graph8/factory";
-import { syncOrgFromGraph8 } from "../../../../lib/services/graph8/liveSync";
+import { analyzeLiveDeals, finishLiveSync, startLiveSync } from "../../../../lib/services/graph8/liveSync";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -16,9 +16,18 @@ export async function POST(request: NextRequest) {
       return jsonError(400, "Add a Graph8 API key before syncing.");
     }
     const provider = await getProviderForOrg(user.organizationId);
+    const body = await request.json().catch(() => ({}));
+    const step = body?.step || "start";
     let result;
     try {
-      result = await syncOrgFromGraph8(user.organizationId, provider);
+      if (step === "analyze") {
+        const deals = Array.isArray(body.deals) ? body.deals.slice(0, 10) : [];
+        result = await analyzeLiveDeals(user.organizationId, provider, deals);
+      } else if (step === "finish") {
+        result = await finishLiveSync(user.organizationId, provider);
+      } else {
+        result = await startLiveSync(user.organizationId, provider);
+      }
     } catch (err) {
       return jsonError(502, `Could not read deals from Graph8: ${err instanceof Error ? err.message : String(err)}`);
     }

@@ -25,15 +25,13 @@ export async function runInvestigation(args: {
   skipRefresh?: boolean;
 }): Promise<DealAnalysis | null> {
   const { organizationId, provider, graph8DealId, skipRefresh } = args;
-  const { deal } = await syncDeal({ organizationId, provider, graph8DealId });
+  const { deal, bundle: g8Bundle } = await syncDeal({ organizationId, provider, graph8DealId });
 
   if (deal.outcome === "open") {
     logger.info("investigation_skipped_deal_still_open", { dealId: deal.id });
     return null;
   }
 
-  // Re-fetch the bundle for evidence building (syncDeal already normalized+persisted stage/contacts).
-  const g8Bundle = await provider.getDealBundle(graph8DealId);
   const evidenceBundle = buildEvidenceBundle(g8Bundle);
   const extractor = getExtractor(graph8DealId);
 
