@@ -32,7 +32,10 @@ const SYSTEM_PROMPT =
 const EVIDENCE_SCHEMA = {
   type: "object",
   properties: {
-    source_type: { type: "string" },
+    source_type: {
+      type: "string",
+      enum: ["meeting", "transcript", "deal_activity", "note", "close_reason", "stakeholder_data", "salesperson_confirmation", "other"],
+    },
     source_external_id: { type: ["string", "null"] },
     finding: { type: "string" },
     excerpt: { type: ["string", "null"] },

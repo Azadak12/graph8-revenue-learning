@@ -14,6 +14,8 @@ export function SettingsPage() {
   const [connection, setConnection] = useState<ConnectionInfo | null>(null);
   const [apiKey, setApiKey] = useState("");
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
 
   function load() {
     api.get<ConnectionInfo>("/api/settings/graph8-connection").then(setConnection);
@@ -28,6 +30,25 @@ export function SettingsPage() {
       load();
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function syncDeals() {
+    setSyncing(true);
+    setSyncMessage(null);
+    try {
+      const res = await api.post<{ closed: number; active: number; analyzed: number; failed: number }>(
+        "/api/settings/graph8-sync"
+      );
+      setSyncMessage(
+        `Imported ${res.closed} closed and ${res.active} open deals from Graph8. ${res.analyzed} analyzed` +
+          (res.failed ? `, ${res.failed} failed.` : ".")
+      );
+      load();
+    } catch (err) {
+      setSyncMessage(err instanceof Error ? err.message : "Sync failed.");
+    } finally {
+      setSyncing(false);
     }
   }
 
@@ -67,6 +88,22 @@ export function SettingsPage() {
             {saving ? "Saving..." : "Save"}
           </button>
         </div>
+        {connection?.mode === "live" && (
+          <div className="mt-6 border-t border-slate-100 pt-4 dark:border-slate-800">
+            <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+              Replace the demo data with your real deals: imports every closed and open deal from Graph8 and
+              analyzes it.{connection.last_sync_at && ` Last synced ${new Date(connection.last_sync_at).toLocaleString()}.`}
+            </p>
+            <button
+              onClick={syncDeals}
+              disabled={syncing}
+              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
+            >
+              {syncing ? "Syncing... this can take a minute" : "Sync deals from Graph8"}
+            </button>
+            {syncMessage && <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{syncMessage}</p>}
+          </div>
+        )}
       </Card>
 
       {connection?.mode !== "live" && (

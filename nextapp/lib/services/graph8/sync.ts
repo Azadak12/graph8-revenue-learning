@@ -6,6 +6,9 @@ import type { Graph8Provider } from "./base";
 import type { G8DealBundle } from "./schemas";
 import type { Deal, DealSegment, DealOutcome } from "@prisma/client";
 
+const CONTACT_ROLES = ["champion", "decision_maker", "influencer", "blocker", "coach", "end_user", "unknown"];
+const SEGMENTS = ["enterprise", "mid_market", "smb"];
+
 export async function syncDeal(args: {
   organizationId: string;
   provider: Graph8Provider;
@@ -21,7 +24,7 @@ export async function syncDeal(args: {
     name: g8Deal.name,
     companyName: g8Deal.companyName,
     industry: g8Deal.industry,
-    segment: g8Deal.segment as DealSegment,
+    segment: (SEGMENTS.includes(g8Deal.segment) ? g8Deal.segment : "mid_market") as DealSegment,
     amount: g8Deal.amount,
     currency: g8Deal.currency,
     pipelineId: g8Deal.pipelineId,
@@ -61,7 +64,7 @@ export async function syncDeal(args: {
         dealId: deal!.id,
         name: contact.name,
         title: contact.title,
-        role: contact.role as any,
+        role: (CONTACT_ROLES.includes(contact.role) ? contact.role : "unknown") as any,
         engagedAt: contact.engagedAt,
       })),
     });

@@ -22,8 +22,9 @@ export async function runInvestigation(args: {
   organizationId: string;
   provider: Graph8Provider;
   graph8DealId: string;
+  skipRefresh?: boolean;
 }): Promise<DealAnalysis | null> {
-  const { organizationId, provider, graph8DealId } = args;
+  const { organizationId, provider, graph8DealId, skipRefresh } = args;
   const { deal } = await syncDeal({ organizationId, provider, graph8DealId });
 
   if (deal.outcome === "open") {
@@ -145,9 +146,11 @@ export async function runInvestigation(args: {
     }
   }
 
-  await refreshPatternsForSegment({ organizationId, industry: deal.industry, segment: deal.segment });
-  await refreshRecommendations({ organizationId });
-  await refreshFutureWarnings({ organizationId, provider });
+  if (!skipRefresh) {
+    await refreshPatternsForSegment({ organizationId, industry: deal.industry, segment: deal.segment });
+    await refreshRecommendations({ organizationId });
+    await refreshFutureWarnings({ organizationId, provider });
+  }
 
   return analysis;
 }

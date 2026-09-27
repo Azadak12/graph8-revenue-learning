@@ -1,0 +1,27 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "../../../../lib/db";
+import { getCurrentUser } from "../../../../lib/auth";
+import { jsonError, withErrorHandling } from "../../../../lib/apiHelpers";
+import { getProviderForOrg } from "../../../../lib/services/graph8/factory";
+import { syncOrgFromGraph8 } from "../../../../lib/services/graph8/liveSync";
+
+export const dynamic = "force-dynamic";
+export const maxDuration = 60;
+
+export async function POST(request: NextRequest) {
+  return withErrorHandling(async () => {
+    const user = await getCurrentUser(request);
+    const connection = await prisma.graph8Connection.findUnique({ where: { organizationId: user.organizationId } });
+    if (connection?.mode !== "live" || !connection.encryptedApiKeyRef) {
+      return jsonError(400, "Add a Graph8 API key before syncing.");
+    }
+    const provider = await getProviderForOrg(user.organizationId);
+    let result;
+    try {
+      result = await syncOrgFromGraph8(user.organizationId, provider);
+    } catch (err) {
+      return jsonError(502, `Could not read deals from Graph8: ${err instanceof Error ? err.message : String(err)}`);
+    }
+    return NextResponse.json(result);
+  });
+}
