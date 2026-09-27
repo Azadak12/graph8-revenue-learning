@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../lib/db";
 import { getCurrentUser } from "../../../../lib/auth";
-import { withErrorHandling } from "../../../../lib/apiHelpers";
+import { jsonError, withErrorHandling } from "../../../../lib/apiHelpers";
 import { encryptSecret } from "../../../../lib/secrets";
+import { cleanApiKey } from "../../../../lib/services/graph8/liveProvider";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,9 @@ export async function POST(request: NextRequest) {
     let connection = await prisma.graph8Connection.findUnique({
       where: { organizationId: user.organizationId },
     });
-    const encryptedApiKeyRef = encryptSecret(payload.api_key);
+    const apiKey = cleanApiKey(String(payload.api_key ?? ""));
+    if (!apiKey) return jsonError(400, "Enter a Graph8 API key.");
+    const encryptedApiKeyRef = encryptSecret(apiKey);
 
     if (!connection) {
       connection = await prisma.graph8Connection.create({
