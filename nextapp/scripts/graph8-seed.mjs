@@ -41,7 +41,7 @@ async function call(method, path, body, { quiet = false } = {}) {
     let json;
     try { json = JSON.parse(text); } catch { json = text.slice(0, 500); }
     const step = { method, path, status: res.status };
-    if (!res.ok) step.error = typeof json === "string" ? json : json?.message || json?.detail || json;
+    if (!res.ok) step.error = typeof json === "string" ? json : JSON.stringify(json).slice(0, 1500);
     report.steps.push(step);
     if (!quiet && !res.ok) console.log(`   ${method} ${path} -> ${res.status} ${JSON.stringify(step.error).slice(0, 200)}`);
     return { ok: res.ok, status: res.status, body: json };
@@ -50,7 +50,33 @@ async function call(method, path, body, { quiet = false } = {}) {
 }
 
 const dataOf = (r) => (r?.body && typeof r.body === "object" && "data" in r.body ? r.body.data : r?.body);
-const idOf = (obj) => obj?.id ?? obj?.deal_id ?? obj?.company_id ?? obj?.contact_id ?? obj?.person_id ?? obj?.user_id;
+function idOf(obj) {
+  if (!obj || typeof obj !== "object") return undefined;
+  const direct = obj.id ?? obj.deal_id ?? obj.contact_id ?? obj.person_id ?? obj.record_id ?? obj.company_id;
+  if (direct != null) return direct;
+  for (const k of ["deal", "company", "contact", "person", "record", "result", "item"]) {
+    const found = idOf(obj[k]);
+    if (found != null) return found;
+  }
+  return undefined;
+}
+const asInt = (v) => (v != null && /^\d+$/.test(String(v)) ? Number(v) : v);
+// Finds a Graph8 user id inside any response (e.g. who created a record).
+const USER_KEYS = ["user_id", "owner_id", "created_by", "created_by_id", "creator_id", "author_id", "assignee_id"];
+function findUserId(obj, depth = 0) {
+  if (!obj || typeof obj !== "object" || depth > 5) return null;
+  if (Array.isArray(obj)) {
+    for (const x of obj) { const f = findUserId(x, depth + 1); if (f) return f; }
+    return null;
+  }
+  for (const k of USER_KEYS) {
+    const v = obj[k];
+    if ((typeof v === "string" && v.length > 3 && !v.includes("@")) || typeof v === "number") return String(v);
+    if (v && typeof v === "object" && v.id) return String(v.id);
+  }
+  for (const v of Object.values(obj)) { const f = findUserId(v, depth + 1); if (f) return f; }
+  return null;
+}
 const daysAgo = (n) => new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "");
 const asList = (d) => (Array.isArray(d) ? d : d?.items || d?.data || d?.pipelines || d?.reasons || d?.users || d?.members || []);
@@ -68,36 +94,8 @@ const find = (re, method) =>
 report.spec_found = !!spec;
 console.log(`   ${spec ? specPaths.length + " endpoints found" : "API list not available, using known endpoints"}`);
 
-// ---------------------------------------------------------------- owner
-console.log("2) Finding your Graph8 user id (deal owner)...");
-let ownerId = process.env.GRAPH8_OWNER_ID || null;
-if (!ownerId) {
-  const candidates = [
-    ...find(/(^|\/)me$/, "get"),
-    "/me", "/users/me", "/auth/me", "/account/me", "/user", "/users/current",
-    ...find(/^\/(users|members|team|workspace\/members|workspace\/users|organization\/members)$/, "get"),
-    "/users", "/members",
-  ];
-  for (const path of [...new Set(candidates)]) {
-    const r = await call("GET", path, undefined, { quiet: true });
-    if (!r.ok) continue;
-    const d = dataOf(r);
-    const obj = Array.isArray(d) || d?.items || d?.users || d?.members ? asList(d)[0] : d?.user || d;
-    const id = obj?.user_id ?? obj?.id;
-    if (id) { ownerId = String(id); console.log(`   found via GET ${path}`); break; }
-  }
-}
-if (!ownerId) {
-  // Fall back to the creator of any existing task or note.
-  const t = await call("GET", "/tasks?limit=5", undefined, { quiet: true });
-  const task = asList(dataOf(t))[0];
-  ownerId = task?.created_by || task?.assignee_id || null;
-}
-report.owner_id_found = !!ownerId;
-console.log(ownerId ? `   owner id: ${ownerId}` : "   not found - will try creating deals without it");
-
 // ---------------------------------------------------------------- pipeline
-console.log("3) Setting up the sales pipeline...");
+console.log("2) Setting up the sales pipeline...");
 const STAGES = ["Discovery", "Technical Evaluation", "Proposal", "Negotiation", "Closed Won", "Closed Lost"];
 async function getPipelines() {
   return asList(dataOf(await call("GET", "/deals/pipelines", undefined, { quiet: true })));
@@ -127,6 +125,38 @@ const lostStage = stages.find((s) => s.is_lost || s.is_closed_lost || s.type ===
 const openStages = stages.filter((s) => s !== wonStage && s !== lostStage);
 report.pipeline = { found: !!pipeline, stages: stages.map(stageName), won_stage: stageName(wonStage), lost_stage: stageName(lostStage) };
 console.log(pipeline ? `   pipeline "${pipeline.name}" with stages: ${stages.map(stageName).join(", ")}` : "   no pipeline available - deals will use Graph8's default");
+
+// ---------------------------------------------------------------- owner
+console.log("3) Finding your Graph8 user id (deal owner)...");
+let ownerId = process.env.GRAPH8_OWNER_ID || null;
+const userListRe = /(^|\/)(me|whoami|profile|current[-_]?user|self|users|members|team[-_]?members|teammates|owners|seats)$/i;
+const ownerPaths = [...new Set([
+  ...specPaths.filter((p) => !p.includes("{") && userListRe.test(p) && (spec.paths[p]?.get || spec.paths["/api/v1" + p]?.get)),
+  "/me", "/users/me", "/auth/me", "/users", "/members", "/deals/owners", "/owners",
+])];
+report.owner_candidate_paths = ownerPaths;
+if (!ownerId) {
+  for (const path of ownerPaths) {
+    const r = await call("GET", path, undefined, { quiet: true });
+    if (!r.ok) continue;
+    const d = dataOf(r);
+    const list = asList(d);
+    const obj = list.length ? list[0] : d?.user || d;
+    const id = obj?.user_id ?? obj?.id ?? findUserId(d);
+    if (id) { ownerId = String(id); console.log(`   found via GET ${path}`); break; }
+  }
+}
+if (!ownerId) {
+  const pl = await call("GET", "/deals/pipelines", undefined, { quiet: true });
+  ownerId = findUserId(dataOf(pl));
+  if (ownerId) console.log("   found as the creator of the pipeline");
+}
+if (!ownerId) {
+  const t = await call("GET", "/tasks?limit=5", undefined, { quiet: true });
+  ownerId = findUserId(dataOf(t));
+  if (ownerId) console.log("   found as the creator of an existing task");
+}
+console.log(ownerId ? `   owner id: ${ownerId}` : "   not found yet - will look for it on the first company created");
 
 // ---------------------------------------------------------------- close reasons
 const reasonsR = await call("GET", "/deals/close-reasons", undefined, { quiet: true });
@@ -215,6 +245,12 @@ for (const d of all) {
     companyId = idOf(asList(dataOf(r))[0]);
   }
   row.company = !!companyId;
+  if (!ownerId) ownerId = findUserId(dataOf(r));
+  if (!ownerId && companyId) {
+    const note = await call("POST", `/companies/${companyId}/notes`, { content: "Sample account created for the Revenue Learning demo." }, { quiet: true });
+    ownerId = findUserId(dataOf(note));
+    if (ownerId) console.log(`   owner id found from a company note: ${ownerId}`);
+  }
 
   // Contacts
   const contactIds = [];
@@ -223,32 +259,56 @@ for (const d of all) {
     const email = `${slug(first)}.${slug(rest.join(" ") || "contact")}@${domain}`;
     let c = await call("POST", "/contacts", {
       first_name: first, last_name: rest.join(" ") || "-", work_email: email, job_title: title,
-      company_id: companyId ? Number(companyId) : undefined, company_domain: domain,
+      company_id: companyId ? asInt(companyId) : undefined, company_domain: domain,
     }, { quiet: true });
     let cid = idOf(dataOf(c));
     if (!cid) {
       c = await call("GET", `/contacts?email=${encodeURIComponent(email)}&limit=1`, undefined, { quiet: true });
       cid = idOf(asList(dataOf(c))[0]);
     }
-    if (cid) contactIds.push({ id: Number(cid), role });
+    if (cid) contactIds.push({ id: asInt(cid), role });
+    else row.contact_error = c.body;
   }
   row.contacts = contactIds.length;
 
   // Deal
   const firstStage = openStages.find((s) => stageName(s) === (d.stage_history?.at(-1)?.[0] || "")) || openStages[0];
   const dealBody = {
-    name: d.name, company_id: companyId ? Number(companyId) : undefined, amount: d.amount, currency: d.currency,
+    name: d.name, company_id: companyId ? asInt(companyId) : undefined, amount: d.amount, currency: d.currency,
     pipeline_id: pipeline?.id, stage_id: firstStage?.id, owner_id: ownerId || undefined,
     contact_ids: contactIds.map((c) => c.id), allow_duplicate: false,
   };
-  r = await call("POST", "/deals", dealBody);
-  let dealId = idOf(dataOf(r));
+  const variants = [
+    dealBody,
+    { ...dealBody, stage_id: undefined, pipeline_id: undefined },
+    { ...dealBody, stage_id: undefined, pipeline_id: undefined, company_id: undefined },
+  ];
+  let dealId;
+  for (const body of variants) {
+    r = await call("POST", "/deals", body, { quiet: true });
+    dealId = idOf(dataOf(r));
+    if (dealId || r.status === 409) break;
+  }
   if (!dealId && r.status === 409) {
     const s = await call("GET", `/deals?search=${encodeURIComponent(d.name)}&limit=1`, undefined, { quiet: true });
     dealId = idOf(asList(dataOf(s))[0]);
     row.existing = !!dealId;
   }
-  if (!dealId) { row.error = r.body?.message || r.body?.detail || r.status; console.log(`   x ${d.name}`); save(); continue; }
+  if (!dealId) {
+    row.error = r.body;
+    console.log(`   x ${d.name}`);
+    if (results.filter((x) => x.deal_id).length === 0) {
+      console.log("\n   Graph8 rejected the deal. Details to send to Claude:");
+      console.log(`   owner id: ${ownerId || "NOT FOUND"} | company created: ${!!companyId} | contacts created: ${contactIds.length}/${(d.contacts || []).length}`);
+      if (row.contact_error) console.log(`   contact error: ${JSON.stringify(row.contact_error).slice(0, 600)}`);
+      console.log(`   deal error: ${JSON.stringify(r.body).slice(0, 900)}`);
+      console.log(`   user-related endpoints: ${ownerPaths.slice(0, 15).join(", ")}`);
+      save();
+      break;
+    }
+    save();
+    continue;
+  }
   row.deal_id = String(dealId);
 
   // Buying-committee roles
