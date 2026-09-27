@@ -72,7 +72,7 @@ const LOSS_RULES: Rule[] = [
 ];
 
 const WIN_SIGNALS: RegExp =
-  /engaged (from|early|within)|champion|roi|tco|same[- ]day|confirmed (and demoed )?early|surfaced early|matched to|addressed every|differentiat|momentum/i;
+  /engaged (from|early|within)|champion|\broi\b|\btco\b|same[- ]day|confirmed .*early|surfaced .*early|early in (discovery|the evaluation)|modular|quarterly term|matched .* to|addressed every|differentiat|momentum|implementation speed/i;
 
 function lines(bundle: DealEvidenceBundle): Array<{ id: string | null; text: string; type: string }> {
   const out: Array<{ id: string | null; text: string; type: string }> = [];

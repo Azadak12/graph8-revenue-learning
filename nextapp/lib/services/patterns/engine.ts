@@ -48,9 +48,11 @@ async function factorBucketStats(deals: Array<{ id: string; outcome: string }>):
 async function decisionMakerLateDealIds(deals: Array<{ id: string }>): Promise<Set<string>> {
   const late = new Set<string>();
   for (const deal of deals) {
-    const contacts = await prisma.dealContact.findMany({
-      where: { dealId: deal.id, role: "decision_maker" },
-    });
+    const allContacts = await prisma.dealContact.findMany({ where: { dealId: deal.id } });
+    // No buying-role data for this deal (e.g. roles not returned by Graph8):
+    // don't guess, leave it to what the notes say.
+    if (!allContacts.some((c) => c.role !== "unknown")) continue;
+    const contacts = allContacts.filter((c) => c.role === "decision_maker");
     const proposalSnapshot = await prisma.dealSnapshot.findFirst({
       where: { dealId: deal.id, stageName: { contains: "proposal", mode: "insensitive" } },
       orderBy: { enteredAt: "asc" },
@@ -113,14 +115,27 @@ async function upsertPattern(args: {
   const { strength, confidence } = result;
 
   const definition = bucketDefinition(bucketKey);
-  const narrative = formatNarrative(definition.narrative, {
+  let narrative = formatNarrative(definition.narrative, {
     lost_count: lostIds.size,
     won_count: wonIds.size,
     total_lost: totalLost,
     total_won: totalWon,
     industry: segmentDefinition.industry || "",
-    segment: (segmentDefinition.segment || "").replace(/_/g, "-"),
+    segment: segmentDefinition.segment === "smb" ? "SMB" : (segmentDefinition.segment || "").replace(/_/g, "-"),
   });
+
+  // Ground the learning in its deals: biggest examples and lost pipeline.
+  if (lostIds.size > 0) {
+    const lostDeals = await prisma.deal.findMany({
+      where: { id: { in: Array.from(lostIds) } },
+      select: { name: true, companyName: true, amount: true },
+      orderBy: { amount: "desc" },
+    });
+    const pipeline = lostDeals.reduce((sum, d) => sum + Number(d.amount || 0), 0);
+    const names = lostDeals.slice(0, 3).map((d) => d.companyName || d.name.split(" - ")[0]);
+    const money = pipeline >= 1_000_000 ? `$${(pipeline / 1_000_000).toFixed(1)}M` : `$${Math.round(pipeline / 1_000)}K`;
+    narrative += ` ${money} in lost pipeline; examples: ${names.join(", ")}.`;
+  }
 
   const existing = await prisma.pattern.findMany({ where: { organizationId, category } });
   let pattern = existing.find((p) => {
@@ -199,6 +214,17 @@ export async function refreshPatternsForSegment(args: {
   const isStats = await factorBucketStats(industrySegmentDeals);
   const sStats = await factorBucketStats(segmentOnlyDeals);
 
+  // "Decision maker engaged late" combines what the notes say with the
+  // stakeholder timing data, instead of one overwriting the other.
+  const lateIds = await decisionMakerLateDealIds(segmentOnlyDeals);
+  const dm = sStats.get("missing_decision_maker") || { lost: new Set<string>(), won: new Set<string>() };
+  for (const d of segmentOnlyDeals) {
+    if (!lateIds.has(d.id)) continue;
+    if (d.outcome === "lost") dm.lost.add(d.id);
+    if (d.outcome === "won") dm.won.add(d.id);
+  }
+  if (dm.lost.size || dm.won.size) sStats.set("missing_decision_maker", dm);
+
   const seenBucketKeys = new Set([...isStats.keys(), ...sStats.keys()]);
   for (const bucketKey of seenBucketKeys) {
     const grain = bucketDefinition(bucketKey).grain;
@@ -230,21 +256,6 @@ export async function refreshPatternsForSegment(args: {
     });
     if (pattern) patterns.push(pattern);
   }
-
-  const lateIds = await decisionMakerLateDealIds(segmentOnlyDeals);
-  const lostLate = new Set(segmentOnlyDeals.filter((d) => d.outcome === "lost" && lateIds.has(d.id)).map((d) => d.id));
-  const wonLate = new Set(segmentOnlyDeals.filter((d) => d.outcome === "won" && lateIds.has(d.id)).map((d) => d.id));
-  const pattern = await upsertPattern({
-    organizationId,
-    category: "missing_decision_maker",
-    bucketKey: "missing_decision_maker",
-    segmentDefinition: { segment },
-    lostIds: lostLate,
-    wonIds: wonLate,
-    totalLost: totalLostS,
-    totalWon: totalWonS,
-  });
-  if (pattern) patterns.push(pattern);
 
   return patterns;
 }

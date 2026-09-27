@@ -67,7 +67,7 @@ export async function analyzeLiveDeals(
     deals.map(async ({ id, outcome }) => {
       provider.rememberOutcome?.(id, outcome);
       try {
-        await runInvestigation({ organizationId, provider, graph8DealId: id, skipRefresh: true });
+        await runInvestigation({ organizationId, provider, graph8DealId: id, skipRefresh: true, createGraph8Tasks: false });
         analyzed++;
       } catch (err) {
         failed++;
