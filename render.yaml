@@ -1,0 +1,82 @@
+databases:
+  - name: g8-postgres
+    plan: free
+    databaseName: revenue_learning
+    user: g8
+
+services:
+  - type: redis
+    name: g8-redis
+    plan: free
+    ipAllowList: []
+
+  - type: web
+    name: g8-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /
+    dockerCommand: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: g8-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: g8-redis
+          type: redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SECRET_ENCRYPTION_KEY
+        generateValue: true
+      - key: GRAPH8_API_KEY
+        sync: false
+      - key: GRAPH8_BASE_URL
+        value: https://be.graph8.com/api/v1
+      - key: GRAPH8_WEBHOOK_SECRET
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: claude-sonnet-5
+      - key: CORS_ORIGINS
+        sync: false
+
+  - type: worker
+    name: g8-worker
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    dockerCommand: python worker.py
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: g8-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: g8-redis
+          type: redis
+          property: connectionString
+      - key: JWT_SECRET
+        sync: false
+      - key: SECRET_ENCRYPTION_KEY
+        sync: false
+      - key: GRAPH8_API_KEY
+        sync: false
+      - key: GRAPH8_BASE_URL
+        value: https://be.graph8.com/api/v1
+      - key: GRAPH8_WEBHOOK_SECRET
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: claude-sonnet-5
