@@ -1,0 +1,854 @@
+"""Seeded DEMO DATA for Graph8 Revenue Learning.
+
+This is fictional B2B SaaS deal data, clearly labeled as DEMO DATA everywhere it
+surfaces in the UI. It intentionally encodes three learnable patterns:
+
+1. SCIM / identity-provisioning gaps recur in lost enterprise financial-services
+   deals (5 of 6 lost enterprise FS deals), and are absent as an issue in the 4
+   won enterprise FS deals (they either didn't need it or it was confirmed
+   supported early) -- 0 comparable wins.
+2. Economic/technical decision makers tend to engage EARLY in won enterprise
+   deals and LATE (after proposal) or not at all in lost enterprise deals.
+3. Mid-market losses cluster around pricing/packaging friction.
+
+Plus: one loss that is explicitly a buyer-side budget freeze (not a seller
+failure), and one loss with genuinely insufficient evidence (UNKNOWN), so the
+system demonstrates it does NOT force a conclusion everywhere.
+
+Each entry also carries a `ground_truth` block. This is used by the
+DeterministicDemoExtractor fallback (when no ANTHROPIC_API_KEY is configured)
+so the full pipeline -- persistence, pattern engine, recommendations -- works
+identically offline. When an API key IS configured, the real LLM reads the
+narrative fields (meetings/objections/requirements/notes) independently; the
+ground_truth is not shown to it.
+"""
+
+from datetime import datetime, timedelta, timezone
+
+
+def _dt(days_ago: int) -> datetime:
+    return datetime.now(timezone.utc) - timedelta(days=days_ago)
+
+
+# ---------------------------------------------------------------------------
+# LOST — Enterprise Financial Services — SCIM / provisioning pattern (5 of 6)
+# ---------------------------------------------------------------------------
+
+ABC_BANK = {
+    "external_id": "demo-deal-001",
+    "name": "ABC Bank — Enterprise Platform Rollout",
+    "company_name": "ABC Bank",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 180000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Priya Nair",
+    "opened_days_ago": 96,
+    "closed_days_ago": 4,
+    "stage_history": [
+        ("Discovery", 96, 78),
+        ("Technical Evaluation", 78, 30),
+        ("Proposal", 30, 10),
+        ("Negotiation", 10, 4),
+    ],
+    "contacts": [
+        ("Rahul Mehta", "VP Engineering", "champion", 90),
+        ("Susan Cole", "CISO", "decision_maker", 26),
+        ("Dana Wu", "IT Security Analyst", "influencer", 74),
+    ],
+    "meetings": [
+        (88, "Discovery call. Buyer described a multi-year cloud migration and named identity governance as a compliance requirement, without specifics yet."),
+        (74, "Technical deep-dive with IT Security. Analyst asked whether the platform supports automated user provisioning/deprovisioning via SCIM for their identity provider. Rep noted it down to follow up."),
+        (40, "Security review call. CISO joined for the first time and asked directly: 'Do you support SCIM 2.0 for Okta?' Team confirmed SCIM is not currently supported, only manual CSV-based provisioning."),
+        (28, "Buyer's security team flagged manual provisioning as a blocker for their compliance audit requirements (SOC 2 vendor management control)."),
+    ],
+    "notes": [
+        (85, "Requirements doc from buyer lists 'SCIM/SSO provisioning' under mandatory security requirements, tier 1."),
+    ],
+    "objections": [
+        "No SCIM support means our security team has to manually manage access, which fails our audit control for automated deprovisioning.",
+    ],
+    "requirements": ["SCIM 2.0 user provisioning", "SOC 2 Type II", "SSO via Okta"],
+    "competitors": ["Vendor with native SCIM support (unnamed in notes)"],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — buyer selected a competitor citing lack of SCIM/automated provisioning as the deciding security gap.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "product_capability_gap", "specific_issue": "SCIM 2.0 automated user provisioning not supported",
+            "confidence": "high", "preventability": "potentially_preventable", "departments": ["product", "sales_engineering"],
+        },
+        "secondary_factors": [
+            {"category": "poor_discovery", "specific_issue": "Identity-provisioning requirement surfaced late (technical eval), not at discovery",
+             "confidence": "medium", "preventability": "preventable", "departments": ["sales_engineering", "sales"]},
+        ],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+GLOBAL_FINANCE = {
+    "external_id": "demo-deal-002",
+    "name": "Global Finance Corp — Data Platform",
+    "company_name": "Global Finance Corp",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 220000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Marcus Reid",
+    "opened_days_ago": 110,
+    "closed_days_ago": 12,
+    "stage_history": [
+        ("Discovery", 110, 90),
+        ("Technical Evaluation", 90, 35),
+        ("Proposal", 35, 20),
+        ("Negotiation", 20, 12),
+    ],
+    "contacts": [
+        ("Angela Ford", "Director of Data", "champion", 105),
+        ("Tom Ricci", "CTO", "decision_maker", 22),
+    ],
+    "meetings": [
+        (86, "Kickoff with data team. No mention yet of identity/provisioning requirements."),
+        (50, "Technical evaluation. Buyer's IAM team asked about SCIM support for automated deprovisioning when employees leave. Rep escalated internally, no immediate answer given on the call."),
+        (24, "CTO joined for the first time near proposal stage, raised SCIM as a hard requirement for any vendor touching sensitive financial data."),
+    ],
+    "notes": [
+        (48, "IAM team follow-up email: 'Please confirm SCIM 2.0 support — this is required for our vendor risk approval.'"),
+    ],
+    "objections": ["Vendor risk/compliance requires automated provisioning; manual processes are not acceptable at our scale."],
+    "requirements": ["SCIM 2.0", "Vendor risk approval", "Data residency (US)"],
+    "competitors": ["Incumbent vendor with SCIM support"],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — vendor risk/compliance review failed due to lack of automated (SCIM) provisioning.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "product_capability_gap", "specific_issue": "SCIM 2.0 provisioning required for vendor risk approval, not available",
+            "confidence": "high", "preventability": "potentially_preventable", "departments": ["product", "security"],
+        },
+        "secondary_factors": [
+            {"category": "missing_decision_maker", "specific_issue": "CTO (economic decision maker) engaged only near Proposal stage",
+             "confidence": "medium", "preventability": "preventable", "departments": ["sales"]},
+        ],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+NORTHSTAR_BANK = {
+    "external_id": "demo-deal-003",
+    "name": "NorthStar Bank — Core Banking Integration",
+    "company_name": "NorthStar Bank",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 260000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Priya Nair",
+    "opened_days_ago": 130,
+    "closed_days_ago": 18,
+    "stage_history": [
+        ("Discovery", 130, 100),
+        ("Technical Evaluation", 100, 45),
+        ("Proposal", 45, 25),
+        ("Negotiation", 25, 18),
+    ],
+    "contacts": [
+        ("Ken Osei", "Head of Digital Banking", "champion", 122),
+        ("Laura Bianchi", "Chief Risk Officer", "decision_maker", 30),
+        ("Victor Diaz", "IT Security Lead", "blocker", 60),
+    ],
+    "meetings": [
+        (95, "Technical stakeholder (IT Security Lead) joined late into the evaluation, well after initial technical scoping was 'complete'."),
+        (55, "Security lead asked about SCIM and audit logging for provisioning events. Team confirmed no SCIM; suggested a manual quarterly access review as a workaround."),
+        (32, "Risk officer (economic decision maker) joined for the first time. Rejected the manual-workaround proposal as insufficient for regulatory audit.",),
+    ],
+    "notes": [
+        (58, "Internal note: 'technical stakeholder brought in late — should have looped in security earlier per our own playbook.'"),
+    ],
+    "objections": ["Manual access reviews don't meet our regulatory audit cadence; we need automated provisioning."],
+    "requirements": ["SCIM provisioning", "Audit logging", "Regulatory audit trail"],
+    "competitors": ["Unnamed — buyer did not disclose"],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — could not meet automated provisioning/audit requirements; technical stakeholder engaged too late to remediate.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "product_capability_gap", "specific_issue": "No SCIM/automated provisioning; manual workaround rejected by risk/compliance",
+            "confidence": "high", "preventability": "potentially_preventable", "departments": ["product", "compliance"],
+        },
+        "secondary_factors": [
+            {"category": "poor_discovery", "specific_issue": "Technical/security stakeholder brought into the evaluation late",
+             "confidence": "high", "preventability": "preventable", "departments": ["sales", "sales_engineering"]},
+        ],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+MERIDIAN_TRUST = {
+    "external_id": "demo-deal-004",
+    "name": "Meridian Trust — Compliance Suite",
+    "company_name": "Meridian Trust",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 150000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Marcus Reid",
+    "opened_days_ago": 80,
+    "closed_days_ago": 6,
+    "stage_history": [
+        ("Discovery", 80, 65),
+        ("Technical Evaluation", 65, 25),
+        ("Proposal", 25, 6),
+    ],
+    "contacts": [
+        ("Grace Lin", "Compliance Manager", "champion", 76),
+        ("Peter Novak", "VP Risk & Compliance", "decision_maker", 40),
+    ],
+    "meetings": [
+        (60, "Compliance manager flagged that their identity provider (Azure AD) requires SCIM for any third-party app handling customer PII."),
+        (28, "Confirmed with buyer that SCIM is not on the near-term roadmap. Buyer asked for a written statement to bring to their VP."),
+    ],
+    "notes": [],
+    "objections": ["We cannot onboard a vendor without SCIM given our PII handling policy."],
+    "requirements": ["SCIM for Azure AD", "PII handling policy compliance"],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — SCIM/provisioning requirement could not be met; buyer's PII policy required it.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "product_capability_gap", "specific_issue": "SCIM required by PII-handling policy, not available",
+            "confidence": "high", "preventability": "potentially_preventable", "departments": ["product"],
+        },
+        "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+UNION_CAPITAL = {
+    "external_id": "demo-deal-005",
+    "name": "Union Capital Bank — Advisor Portal",
+    "company_name": "Union Capital Bank",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 165000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Priya Nair",
+    "opened_days_ago": 100,
+    "closed_days_ago": 15,
+    "stage_history": [
+        ("Discovery", 100, 80),
+        ("Technical Evaluation", 80, 35),
+        ("Proposal", 35, 15),
+    ],
+    "contacts": [
+        ("Owen Grant", "IT Manager", "champion", 92),
+        ("Renee Farrow", "COO", "decision_maker", 20),
+    ],
+    "meetings": [
+        (70, "IT manager mentioned SCIM as a 'nice to have' initially."),
+        (33, "Escalated to 'must have' once security reviewed the vendor questionnaire — no SCIM was flagged as a top risk item."),
+    ],
+    "notes": [(18, "COO's note to team: 'Provisioning gap is the blocker, everything else was fine.'")],
+    "objections": ["Security flagged provisioning as the top risk item in vendor review."],
+    "requirements": ["SCIM", "Vendor security questionnaire pass"],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — failed vendor security review over provisioning/SCIM gap.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "product_capability_gap", "specific_issue": "SCIM gap failed vendor security review",
+            "confidence": "high", "preventability": "potentially_preventable", "departments": ["product", "security"],
+        },
+        "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+# ---------------------------------------------------------------------------
+# LOST — Enterprise Financial Services — buyer-side, NOT a seller failure
+# ---------------------------------------------------------------------------
+
+CAPITALTRUST = {
+    "external_id": "demo-deal-006",
+    "name": "CapitalTrust — Enterprise Rollout",
+    "company_name": "CapitalTrust",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 200000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Marcus Reid",
+    "opened_days_ago": 70,
+    "closed_days_ago": 8,
+    "stage_history": [
+        ("Discovery", 70, 55),
+        ("Technical Evaluation", 55, 25),
+        ("Proposal", 25, 8),
+    ],
+    "contacts": [
+        ("Wendy Sato", "VP Operations", "champion", 65),
+        ("Ian Foster", "CFO", "decision_maker", 40),
+    ],
+    "meetings": [
+        (50, "Strong technical fit confirmed, SSO and provisioning both supported and validated."),
+        (26, "Buyer proposal call went well, champion very positive."),
+        (10, "Champion informed rep that the company enacted a company-wide spending freeze pending Q3 earnings; all new vendor contracts paused indefinitely."),
+    ],
+    "notes": [(9, "Champion: 'This has nothing to do with your product — we've paused ALL new vendor spend company-wide.'")],
+    "objections": [],
+    "requirements": ["SSO", "SCIM"],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — buyer enacted a company-wide spending freeze; deal was technically approved but budget was pulled.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "buyer_project_cancelled", "specific_issue": "Company-wide spending freeze pending Q3 earnings, unrelated to product fit",
+            "confidence": "high", "preventability": "not_preventable", "departments": ["leadership"],
+        },
+        "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+# ---------------------------------------------------------------------------
+# LOST — Mid-market — pricing / packaging friction (3)
+# ---------------------------------------------------------------------------
+
+BRAMBLE_RETAIL = {
+    "external_id": "demo-deal-007",
+    "name": "Bramble Retail Co — Growth Plan",
+    "company_name": "Bramble Retail Co",
+    "industry": "SaaS",
+    "segment": "mid_market",
+    "amount": 42000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Jordan Blake",
+    "opened_days_ago": 50,
+    "closed_days_ago": 5,
+    "stage_history": [("Discovery", 50, 38), ("Demo", 38, 20), ("Proposal", 20, 5)],
+    "contacts": [("Nina Patel", "Head of Ops", "champion", 45), ("Sam Ortiz", "VP Finance", "decision_maker", 22)],
+    "meetings": [
+        (35, "Demo went well, strong interest in the analytics module specifically."),
+        (18, "Buyer pushed back hard on price — our per-seat pricing requires buying the full suite; they only wanted the analytics module."),
+        (7, "Finance VP: 'We like the product but the packaging forces us to pay for three modules we won't use.'"),
+    ],
+    "notes": [],
+    "objections": ["Packaging bundles three modules; we only need one and won't pay for the rest."],
+    "requirements": [],
+    "competitors": ["Point-solution competitor with modular pricing"],
+    "pricing_notes": ["Per-seat, full-suite-only packaging; no à la carte module pricing available."],
+    "close_reason_raw": "Lost — price/packaging mismatch, competitor offered modular pricing for the one module they needed.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "packaging", "specific_issue": "No modular/à la carte pricing; buyer only wanted one module",
+            "confidence": "high", "preventability": "preventable", "departments": ["pricing", "product"],
+        },
+        "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+COASTAL_GOODS = {
+    "external_id": "demo-deal-008",
+    "name": "Coastal Goods Inc — Team Plan",
+    "company_name": "Coastal Goods Inc",
+    "industry": "SaaS",
+    "segment": "mid_market",
+    "amount": 38000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Jordan Blake",
+    "opened_days_ago": 60,
+    "closed_days_ago": 9,
+    "stage_history": [("Discovery", 60, 44), ("Demo", 44, 25), ("Proposal", 25, 9)],
+    "contacts": [("Miguel Santos", "Ops Manager", "champion", 55)],
+    "meetings": [
+        (40, "Good discovery, clear use case fit."),
+        (22, "Proposal reviewed. Buyer said price per seat was ~40% above their budgeted range for this category."),
+    ],
+    "notes": [(10, "Rep note: 'No economic buyer ever joined a call — only dealt with the ops manager the whole cycle.'")],
+    "objections": ["Price is significantly above our budget for this category of tool."],
+    "requirements": [],
+    "competitors": ["Lower-priced competitor"],
+    "pricing_notes": ["List price ~40% above buyer's budgeted range; no flexible/tiered option offered during the cycle."],
+    "close_reason_raw": "Lost — price exceeded budget; no economic buyer engaged to negotiate value/ROI case.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "pricing", "specific_issue": "List price ~40% above buyer's budget, no tiered option discussed",
+            "confidence": "medium", "preventability": "preventable", "departments": ["pricing", "sales"],
+        },
+        "secondary_factors": [
+            {"category": "missing_decision_maker", "specific_issue": "No economic buyer engaged during the entire sales cycle",
+             "confidence": "medium", "preventability": "preventable", "departments": ["sales"]},
+        ],
+        "overall_confidence": "medium", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+VANTAGE_OUTFITTERS = {
+    "external_id": "demo-deal-009",
+    "name": "Vantage Outfitters — Standard Plan",
+    "company_name": "Vantage Outfitters",
+    "industry": "Technology",
+    "segment": "mid_market",
+    "amount": 45000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Casey Lin",
+    "opened_days_ago": 55,
+    "closed_days_ago": 3,
+    "stage_history": [("Discovery", 55, 40), ("Demo", 40, 18), ("Proposal", 18, 3)],
+    "contacts": [("Bella Cruz", "IT Lead", "champion", 50), ("Frank Diallo", "COO", "decision_maker", 19)],
+    "meetings": [
+        (38, "Demo well received."),
+        (20, "COO joined, liked the product but flagged that the annual-only contract term was a dealbreaker for a mid-year budget cycle."),
+        (5, "Buyer asked for a quarterly or monthly term; we could not accommodate. They chose a competitor offering monthly billing."),
+    ],
+    "notes": [],
+    "objections": ["Annual-only contract doesn't fit our budget cycle; need monthly or quarterly billing."],
+    "requirements": [],
+    "competitors": ["Competitor offering monthly billing"],
+    "pricing_notes": ["Annual-only contract terms; no monthly/quarterly packaging option."],
+    "close_reason_raw": "Lost — contract term/packaging rigidity (annual-only) didn't fit buyer's budget cycle.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "packaging", "specific_issue": "Annual-only contract term incompatible with buyer's budget cycle",
+            "confidence": "high", "preventability": "preventable", "departments": ["pricing", "finance"],
+        },
+        "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+# ---------------------------------------------------------------------------
+# LOST — other segments
+# ---------------------------------------------------------------------------
+
+HARBORVIEW_HEALTH = {
+    "external_id": "demo-deal-010",
+    "name": "Harborview Health — Platform Modernization",
+    "company_name": "Harborview Health",
+    "industry": "Healthcare",
+    "segment": "enterprise",
+    "amount": 190000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Casey Lin",
+    "opened_days_ago": 90,
+    "closed_days_ago": 14,
+    "stage_history": [("Discovery", 90, 70), ("Technical Evaluation", 70, 30), ("Proposal", 30, 14)],
+    "contacts": [("Dr. Alan Cho", "CMIO", "decision_maker", 60)],
+    "meetings": [
+        (65, "Discovery was rushed — only one 30-minute call before moving to technical eval."),
+        (35, "Buyer independently evaluated a specialized healthcare-vertical competitor in parallel; we were not aware until the final call."),
+        (15, "Buyer chose the healthcare-specialized competitor, citing deeper HIPAA-specific workflow templates."),
+    ],
+    "notes": [],
+    "objections": ["Competitor has purpose-built HIPAA workflow templates we don't offer out of the box."],
+    "requirements": ["HIPAA-specific workflows"],
+    "competitors": ["Healthcare-vertical specialist competitor"],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost to a healthcare-vertical specialist competitor with purpose-built HIPAA workflows.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "competitor", "specific_issue": "Lost to healthcare-vertical specialist with purpose-built HIPAA workflow templates",
+            "confidence": "medium", "preventability": "potentially_preventable", "departments": ["product", "sales"],
+        },
+        "secondary_factors": [
+            {"category": "poor_discovery", "specific_issue": "Discovery call was rushed (single 30-min call); competitive landscape not surfaced early",
+             "confidence": "medium", "preventability": "preventable", "departments": ["sales"]},
+        ],
+        "overall_confidence": "medium", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+DELTA_SYSTEMS = {
+    "external_id": "demo-deal-011",
+    "name": "Delta Systems — Platform Evaluation",
+    "company_name": "Delta Systems",
+    "industry": "Technology",
+    "segment": "mid_market",
+    "amount": 30000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Jordan Blake",
+    "opened_days_ago": 65,
+    "closed_days_ago": 20,
+    "stage_history": [("Discovery", 65, 50), ("Demo", 50, 20)],
+    "contacts": [("Unknown Contact", None, "unknown", None)],
+    "meetings": [
+        (48, "Single discovery call. Buyer engaged, then went quiet."),
+    ],
+    "notes": [(21, "Rep note: 'Deal went dark after demo, no response to 4 follow-up emails. Marked closed-lost, reason unclear.'")],
+    "objections": [],
+    "requirements": [],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — buyer went unresponsive, no reason given.",
+    "ground_truth": {
+        "primary_factor": None,
+        "secondary_factors": [],
+        "overall_confidence": "unknown", "human_confirmation_required": True,
+        "unknowns": ["Why did the buyer go unresponsive after the demo?", "Was a competitor selected, or was this a priority change internally?"],
+    },
+}
+
+QUIKSTART_MEDIA = {
+    "external_id": "demo-deal-012",
+    "name": "Quikstart Media — Starter Plan",
+    "company_name": "Quikstart Media",
+    "industry": "Technology",
+    "segment": "smb",
+    "amount": 12000,
+    "currency": "USD",
+    "outcome": "lost",
+    "owner_name": "Casey Lin",
+    "opened_days_ago": 40,
+    "closed_days_ago": 6,
+    "stage_history": [("Discovery", 40, 30), ("Demo", 30, 15), ("Proposal", 15, 6)],
+    "contacts": [("Yara Haddad", "Founder", "decision_maker", 38)],
+    "meetings": [
+        (32, "Great demo, buyer very enthusiastic, asked for a proposal same day."),
+        (24, "Proposal sent 6 days late due to internal approval backlog on the rep's side."),
+        (8, "Buyer had signed with a competitor in the meantime, citing 'you went quiet right when we were ready to buy.'"),
+    ],
+    "notes": [(25, "Internal note: proposal was stuck in manager review for 5 extra days beyond SLA.")],
+    "objections": [],
+    "requirements": [],
+    "competitors": ["Faster-moving competitor"],
+    "pricing_notes": [],
+    "close_reason_raw": "Lost — buyer signed with a competitor after a 6-day internal delay sending the proposal.",
+    "ground_truth": {
+        "primary_factor": {
+            "category": "proposal_delay", "specific_issue": "Proposal delayed ~6 days by internal approval backlog while buyer was ready to close",
+            "confidence": "high", "preventability": "preventable", "departments": ["sales", "operations"],
+        },
+        "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+    },
+}
+
+# ---------------------------------------------------------------------------
+# WON — Enterprise Financial Services (early decision-maker pattern)
+# ---------------------------------------------------------------------------
+
+ACME_FINTECH = {
+    "external_id": "demo-deal-013",
+    "name": "Acme Fintech — Enterprise Platform",
+    "company_name": "Acme Fintech",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 240000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Priya Nair",
+    "opened_days_ago": 100,
+    "closed_days_ago": 10,
+    "stage_history": [("Discovery", 100, 80), ("Technical Evaluation", 80, 40), ("Proposal", 40, 20), ("Negotiation", 20, 10)],
+    "contacts": [
+        ("Elena Voss", "CTO", "decision_maker", 95),
+        ("Marco Bruni", "IT Security Lead", "champion", 88),
+    ],
+    "meetings": [
+        (95, "Discovery call included the CTO from day one — she asked about SSO/SAML support immediately."),
+        (78, "Security review: SSO (SAML) confirmed supported; SCIM was discussed and not required for their identity setup (they use a smaller headcount with manual review acceptable)."),
+        (35, "CTO drove internal consensus quickly given her early involvement; proposal approved with minimal friction."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": ["SSO/SAML"],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Won — strong technical fit, economic buyer (CTO) engaged from discovery, fast internal consensus.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["Economic decision maker (CTO) engaged from the first discovery call", "SSO requirement confirmed early and satisfied"],
+    },
+}
+
+FINEDGE = {
+    "external_id": "demo-deal-014",
+    "name": "FinEdge — Risk Analytics Suite",
+    "company_name": "FinEdge",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 195000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Marcus Reid",
+    "opened_days_ago": 90,
+    "closed_days_ago": 8,
+    "stage_history": [("Discovery", 90, 72), ("Technical Evaluation", 72, 35), ("Proposal", 35, 15), ("Negotiation", 15, 8)],
+    "contacts": [
+        ("Julia Stern", "Head of Risk", "champion", 85),
+        ("Derek Poon", "VP Technology", "decision_maker", 70),
+    ],
+    "meetings": [
+        (80, "Champion (Head of Risk) is highly engaged, brought in VP Technology (decision maker) within the first two weeks."),
+        (60, "Technical discovery explicitly asked about SCIM early; team confirmed SCIM 2.0 support and demoed it live."),
+        (20, "Smooth proposal review; champion had already pre-sold internally."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": ["SCIM 2.0"],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Won — strong champion, decision maker engaged early, SCIM requirement confirmed and demoed early in the cycle.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["Strong internal champion", "Decision maker (VP Technology) engaged within 2 weeks", "SCIM confirmed and demoed early, removing risk"],
+    },
+}
+
+STERLING_FINANCIAL = {
+    "external_id": "demo-deal-015",
+    "name": "Sterling Financial — Advisor Tools",
+    "company_name": "Sterling Financial",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 210000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Priya Nair",
+    "opened_days_ago": 85,
+    "closed_days_ago": 5,
+    "stage_history": [("Discovery", 85, 68), ("Technical Evaluation", 68, 30), ("Proposal", 30, 12), ("Negotiation", 12, 5)],
+    "contacts": [("Hannah Vogel", "COO", "decision_maker", 80), ("Leo Marsh", "IT Director", "champion", 75)],
+    "meetings": [
+        (78, "COO joined the second call and stayed engaged throughout — asked pointed ROI questions early."),
+        (45, "IT director confirmed SCIM was 'nice to have, not required' for their small IT footprint."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": [],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Won — economic buyer engaged early, ROI case made clearly, no blocking technical gaps.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["COO (economic buyer) engaged from the second call", "Clear ROI case presented early"],
+    },
+}
+
+BRIGHTLINE_CAPITAL = {
+    "external_id": "demo-deal-016",
+    "name": "Brightline Capital — Enterprise Suite",
+    "company_name": "Brightline Capital",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 175000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Marcus Reid",
+    "opened_days_ago": 75,
+    "closed_days_ago": 9,
+    "stage_history": [("Discovery", 75, 58), ("Technical Evaluation", 58, 25), ("Proposal", 25, 9)],
+    "contacts": [("Omar Farid", "CFO", "decision_maker", 68), ("Sylvie Roche", "Ops Lead", "champion", 60)],
+    "meetings": [
+        (65, "CFO involved early, compared us directly against a named competitor on total cost of ownership."),
+        (30, "Won the competitive comparison on implementation speed and support responsiveness."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": [],
+    "competitors": ["Named competitor, lost on implementation speed"],
+    "pricing_notes": [],
+    "close_reason_raw": "Won — competitive deal, won on implementation speed and support with economic buyer engaged early.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["CFO engaged early and ran a direct TCO comparison", "Differentiated on implementation speed and support"],
+    },
+}
+
+# ---------------------------------------------------------------------------
+# WON — other segments
+# ---------------------------------------------------------------------------
+
+CEDARWOOD_SUPPLY = {
+    "external_id": "demo-deal-017",
+    "name": "Cedarwood Supply — Team Plan",
+    "company_name": "Cedarwood Supply",
+    "industry": "SaaS",
+    "segment": "mid_market",
+    "amount": 40000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Jordan Blake",
+    "opened_days_ago": 45,
+    "closed_days_ago": 4,
+    "stage_history": [("Discovery", 45, 32), ("Demo", 32, 15), ("Proposal", 15, 4)],
+    "contacts": [("Priya Deshmukh", "Ops Director", "champion", 40), ("Carl Yates", "VP Finance", "decision_maker", 30)],
+    "meetings": [
+        (38, "Discovery surfaced budget range early; rep proposed the mid-tier package that matched it exactly."),
+        (20, "VP Finance engaged early, agreed the tiered package (not full suite) fit their needs and budget."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": [],
+    "competitors": [],
+    "pricing_notes": ["Buyer opted into the mid-tier modular package, priced within their stated budget."],
+    "close_reason_raw": "Won — pricing/packaging matched buyer's budget and needs from early discovery.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["Budget surfaced early in discovery", "Modular package matched to actual need instead of full-suite upsell"],
+    },
+}
+
+PALMETTO_HEALTH = {
+    "external_id": "demo-deal-018",
+    "name": "Palmetto Health Systems — Modernization",
+    "company_name": "Palmetto Health Systems",
+    "industry": "Healthcare",
+    "segment": "enterprise",
+    "amount": 205000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Casey Lin",
+    "opened_days_ago": 95,
+    "closed_days_ago": 11,
+    "stage_history": [("Discovery", 95, 75), ("Technical Evaluation", 75, 35), ("Proposal", 35, 11)],
+    "contacts": [("Dr. Priya Rao", "CMIO", "champion", 88), ("Neil Foster", "COO", "decision_maker", 60)],
+    "meetings": [
+        (80, "Champion (CMIO) ran a structured multi-week evaluation with a clear ROI model tied to clinician time saved."),
+        (45, "COO joined at technical evaluation, reviewed the ROI model, approved quickly."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": ["HIPAA compliance"],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Won — strong champion built a clear ROI case; decision maker engaged mid-cycle and approved quickly.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["Strong clinical champion with a structured evaluation", "Clear ROI model tied to measurable time savings"],
+    },
+}
+
+VERTEX_ROBOTICS = {
+    "external_id": "demo-deal-019",
+    "name": "Vertex Robotics — Platform License",
+    "company_name": "Vertex Robotics",
+    "industry": "Technology",
+    "segment": "mid_market",
+    "amount": 52000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Casey Lin",
+    "opened_days_ago": 60,
+    "closed_days_ago": 7,
+    "stage_history": [("Discovery", 60, 45), ("Demo", 45, 22), ("Proposal", 22, 7)],
+    "contacts": [("Tara Singh", "Engineering Manager", "champion", 55), ("Owen Blake", "VP Eng", "decision_maker", 40)],
+    "meetings": [
+        (50, "Thorough discovery uncovered exact integration requirements up front."),
+        (28, "Technical demo addressed every integration requirement directly with no gaps found."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": ["API integration with internal tooling"],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Won — thorough discovery, no capability gaps surfaced, fast clean cycle.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["Thorough upfront discovery of integration requirements", "Demo directly addressed every stated requirement"],
+    },
+}
+
+LOOMIS_ANALYTICS = {
+    "external_id": "demo-deal-020",
+    "name": "Loomis Analytics — Starter Plan",
+    "company_name": "Loomis Analytics",
+    "industry": "Technology",
+    "segment": "smb",
+    "amount": 15000,
+    "currency": "USD",
+    "outcome": "won",
+    "owner_name": "Jordan Blake",
+    "opened_days_ago": 30,
+    "closed_days_ago": 3,
+    "stage_history": [("Discovery", 30, 20), ("Demo", 20, 10), ("Proposal", 10, 3)],
+    "contacts": [("Ivy Chen", "Founder", "decision_maker", 28)],
+    "meetings": [
+        (22, "Fast, enthusiastic demo."),
+        (12, "Proposal sent same-day; buyer signed within 48 hours."),
+    ],
+    "notes": [],
+    "objections": [],
+    "requirements": [],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": "Won — fast-moving SMB deal, same-day proposal turnaround kept momentum.",
+    "ground_truth": {
+        "primary_factor": None, "secondary_factors": [],
+        "overall_confidence": "high", "human_confirmation_required": False, "unknowns": [],
+        "success_factors": ["Same-day proposal turnaround kept buying momentum"],
+    },
+}
+
+CLOSED_DEALS = [
+    ABC_BANK, GLOBAL_FINANCE, NORTHSTAR_BANK, MERIDIAN_TRUST, UNION_CAPITAL, CAPITALTRUST,
+    BRAMBLE_RETAIL, COASTAL_GOODS, VANTAGE_OUTFITTERS, HARBORVIEW_HEALTH, DELTA_SYSTEMS, QUIKSTART_MEDIA,
+    ACME_FINTECH, FINEDGE, STERLING_FINANCIAL, BRIGHTLINE_CAPITAL,
+    CEDARWOOD_SUPPLY, PALMETTO_HEALTH, VERTEX_ROBOTICS, LOOMIS_ANALYTICS,
+]
+
+# ---------------------------------------------------------------------------
+# ACTIVE deals — used to demo Future Deal Warnings
+# ---------------------------------------------------------------------------
+
+CONTINENTAL_BANK = {
+    "external_id": "demo-deal-101",
+    "name": "Continental Bank — Enterprise Evaluation",
+    "company_name": "Continental Bank",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 230000,
+    "currency": "USD",
+    "outcome": "open",
+    "owner_name": "Priya Nair",
+    "opened_days_ago": 25,
+    "closed_days_ago": None,
+    "stage_history": [("Discovery", 25, 12), ("Technical Evaluation", 12, None)],
+    "contacts": [("Nora Kim", "IT Manager", "champion", 20)],
+    "meetings": [(15, "Discovery call, no security/IAM stakeholder has joined yet.")],
+    "notes": [],
+    "objections": [],
+    "requirements": [],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": None,
+}
+
+WESTPORT_MUTUAL = {
+    "external_id": "demo-deal-102",
+    "name": "Westport Mutual — Digital Banking Suite",
+    "company_name": "Westport Mutual",
+    "industry": "Financial Services",
+    "segment": "enterprise",
+    "amount": 195000,
+    "currency": "USD",
+    "outcome": "open",
+    "owner_name": "Marcus Reid",
+    "opened_days_ago": 18,
+    "closed_days_ago": None,
+    "stage_history": [("Discovery", 18, None)],
+    "contacts": [("Alex Turing", "VP Product", "champion", 15)],
+    "meetings": [(12, "Early discovery, champion engaged; no economic buyer identified yet.")],
+    "notes": [],
+    "objections": [],
+    "requirements": [],
+    "competitors": [],
+    "pricing_notes": [],
+    "close_reason_raw": None,
+}
+
+ACTIVE_DEALS = [CONTINENTAL_BANK, WESTPORT_MUTUAL]
