@@ -4,12 +4,13 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  // Vercel's Postgres/Neon storage integration sets these var names, not a
-  // plain DATABASE_URL. url is the pooled connection (used at runtime by the
-  // deployed app); directUrl is the non-pooled connection Prisma needs for
-  // migrations. Falls back to DATABASE_URL for a non-Vercel/self-hosted DB.
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  // Vercel's native Neon integration sets DATABASE_URL (pooled, used at
+  // runtime) and DATABASE_URL_UNPOOLED (direct, used by Prisma migrations).
+  // Older "Vercel Postgres" template integrations instead set
+  // POSTGRES_PRISMA_URL / POSTGRES_URL_NON_POOLING — lib/db.ts normalizes
+  // those into these two names at process start so either integration works.
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum UserRole {
