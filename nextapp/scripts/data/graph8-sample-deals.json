@@ -1,0 +1,4043 @@
+{
+ "generated_by": "scripts/generate-sample-deals.mjs",
+ "fictional": true,
+ "deals": [
+  {
+   "name": "Harborline Bank - Identity & Access Suite",
+   "company_name": "Harborline Bank",
+   "domain": "harborlinebank-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "11950",
+   "city": "Denver",
+   "country": "US",
+   "amount": 290000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 78,
+   "closed_days_ago": 31,
+   "contacts": [
+    [
+     "Kenji Brennan",
+     "VP Engineering",
+     "champion",
+     78
+    ],
+    [
+     "Omar Okafor",
+     "CISO",
+     "decision_maker",
+     73
+    ],
+    [
+     "Victor Chen",
+     "IT Security Analyst",
+     "influencer",
+     68
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     69,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     59,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     50,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     40,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     55,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Keystone Ridge Credit Union - Platform Expansion",
+   "company_name": "Keystone Ridge Credit Union",
+   "domain": "keystoneridgecreditunion-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "4220",
+   "city": "London",
+   "country": "GB",
+   "amount": 225000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 148,
+   "closed_days_ago": 18,
+   "contacts": [
+    [
+     "Kenji Ramirez",
+     "VP Engineering",
+     "champion",
+     148
+    ],
+    [
+     "Sofia Varga",
+     "CISO",
+     "decision_maker",
+     143
+    ],
+    [
+     "Ravi Costa",
+     "IT Security Analyst",
+     "influencer",
+     138
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     122,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     96,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     70,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     44,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     83,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Pinecrest Capital - Identity & Access Suite",
+   "company_name": "Pinecrest Capital",
+   "domain": "pinecrestcapital-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "10530",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 255000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 144,
+   "closed_days_ago": 25,
+   "contacts": [
+    [
+     "Sofia Adeyemi",
+     "VP Engineering",
+     "champion",
+     144
+    ],
+    [
+     "Nina Lindqvist",
+     "CISO",
+     "decision_maker",
+     139
+    ],
+    [
+     "Maya Duarte",
+     "IT Security Analyst",
+     "influencer",
+     134
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     120,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     96,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     73,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     49,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     85,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Bayview Mutual - Enterprise Rollout",
+   "company_name": "Bayview Mutual",
+   "domain": "bayviewmutual-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "3710",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 270000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 133,
+   "closed_days_ago": 37,
+   "contacts": [
+    [
+     "Jonah Nguyen",
+     "VP Engineering",
+     "champion",
+     133
+    ],
+    [
+     "Felix Abara",
+     "CISO",
+     "decision_maker",
+     128
+    ],
+    [
+     "Priya Novak",
+     "IT Security Analyst",
+     "influencer",
+     123
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     114,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     95,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     75,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     56,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     85,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Granite Peak Financial - Identity & Access Suite",
+   "company_name": "Granite Peak Financial",
+   "domain": "granitepeakfinancial-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "4330",
+   "city": "Seattle",
+   "country": "US",
+   "amount": 295000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 105,
+   "closed_days_ago": 36,
+   "contacts": [
+    [
+     "Leah Kowalski",
+     "VP Engineering",
+     "champion",
+     105
+    ],
+    [
+     "Maya Kowalski",
+     "CISO",
+     "decision_maker",
+     100
+    ],
+    [
+     "Grace Costa",
+     "IT Security Analyst",
+     "influencer",
+     95
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     91,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     77,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     64,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     50,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     71,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Lakeshore Savings - Platform Expansion",
+   "company_name": "Lakeshore Savings",
+   "domain": "lakeshoresavings-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "5410",
+   "city": "Boston",
+   "country": "US",
+   "amount": 135000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 98,
+   "closed_days_ago": 32,
+   "contacts": [
+    [
+     "Owen Bauer",
+     "VP Engineering",
+     "champion",
+     98
+    ],
+    [
+     "Owen Hughes",
+     "CISO",
+     "decision_maker",
+     93
+    ],
+    [
+     "Mei Tanaka",
+     "IT Security Analyst",
+     "influencer",
+     88
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     85,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     72,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     58,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     45,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     65,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Northgate Trust - Identity & Access Suite",
+   "company_name": "Northgate Trust",
+   "domain": "northgatetrust-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "10260",
+   "city": "Austin",
+   "country": "US",
+   "amount": 255000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 92,
+   "closed_days_ago": 51,
+   "contacts": [
+    [
+     "Elena Rossi",
+     "VP Engineering",
+     "champion",
+     92
+    ],
+    [
+     "Nina Brennan",
+     "CISO",
+     "decision_maker",
+     87
+    ],
+    [
+     "Leah Rossi",
+     "IT Security Analyst",
+     "influencer",
+     82
+    ]
+   ],
+   "story": "late_dm",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     82,
+     "Discovery with the champion, strong interest in the platform and a clear use case."
+    ],
+    [
+     72,
+     "Demo for the working team went well; champion asked for a proposal."
+    ],
+    [
+     61,
+     "Proposal review. The economic buyer joined for the first time and questioned why this was a priority this year."
+    ]
+   ],
+   "notes": [
+    [
+     72,
+     "Internal note: we never met the economic buyer before the proposal stage."
+    ]
+   ],
+   "close_reason_raw": "Lost - decision maker joined late and did not prioritize the project."
+  },
+  {
+   "name": "Silverline Bancorp - Enterprise Rollout",
+   "company_name": "Silverline Bancorp",
+   "domain": "silverlinebancorp-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "2930",
+   "city": "Atlanta",
+   "country": "US",
+   "amount": 125000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 84,
+   "closed_days_ago": 50,
+   "contacts": [
+    [
+     "Owen Duarte",
+     "VP Engineering",
+     "champion",
+     84
+    ],
+    [
+     "Samuel Bauer",
+     "CISO",
+     "decision_maker",
+     79
+    ],
+    [
+     "Hannah Sato",
+     "IT Security Analyst",
+     "influencer",
+     74
+    ]
+   ],
+   "story": "late_dm",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     76,
+     "Discovery with the champion, strong interest in the platform and a clear use case."
+    ],
+    [
+     67,
+     "Demo for the working team went well; champion asked for a proposal."
+    ],
+    [
+     59,
+     "Proposal review. The economic buyer joined for the first time and questioned why this was a priority this year."
+    ]
+   ],
+   "notes": [
+    [
+     67,
+     "Internal note: we never met the economic buyer before the proposal stage."
+    ]
+   ],
+   "close_reason_raw": "Lost - decision maker joined late and did not prioritize the project."
+  },
+  {
+   "name": "Clearwater Lending - Enterprise Platform",
+   "company_name": "Clearwater Lending",
+   "domain": "clearwaterlending-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "5500",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 220000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 142,
+   "closed_days_ago": 18,
+   "contacts": [
+    [
+     "Ethan Fischer",
+     "VP Engineering",
+     "champion",
+     142
+    ],
+    [
+     "Aisha Moreau",
+     "CISO",
+     "decision_maker",
+     137
+    ],
+    [
+     "Andre Hughes",
+     "IT Security Analyst",
+     "influencer",
+     132
+    ]
+   ],
+   "story": "freeze",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     111,
+     "Strong technical fit confirmed and security requirements validated."
+    ],
+    [
+     80,
+     "Verbal commit from the champion; contract in legal review."
+    ],
+    [
+     49,
+     "Champion told us the company announced a company-wide spending freeze; all new vendor contracts are on hold."
+    ]
+   ],
+   "notes": [
+    [
+     80,
+     "Champion: 'This has nothing to do with your product.'"
+    ]
+   ],
+   "close_reason_raw": "Lost - buyer-side spending freeze, unrelated to product fit."
+  },
+  {
+   "name": "Oakmont Capital Partners - Platform Expansion",
+   "company_name": "Oakmont Capital Partners",
+   "domain": "oakmontcapitalpartners-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "8230",
+   "city": "Atlanta",
+   "country": "US",
+   "amount": 160000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 71,
+   "closed_days_ago": 25,
+   "contacts": [
+    [
+     "Samuel Fischer",
+     "VP Engineering",
+     "champion",
+     71
+    ],
+    [
+     "Nina Haddad",
+     "CISO",
+     "decision_maker",
+     66
+    ],
+    [
+     "Kenji Nguyen",
+     "IT Security Analyst",
+     "influencer",
+     61
+    ]
+   ],
+   "story": "dark",
+   "stage_reached": 1,
+   "meetings": [
+    [
+     56,
+     "Single discovery call, buyer engaged."
+    ],
+    [
+     40,
+     "Demo delivered; buyer stopped replying to follow-ups."
+    ]
+   ],
+   "notes": [
+    [
+     48,
+     "Rep note: deal went dark after the demo, no response to four follow-up emails. Reason unclear."
+    ]
+   ],
+   "close_reason_raw": "Lost - buyer went unresponsive, no reason given."
+  },
+  {
+   "name": "Redfield Bank - Enterprise Rollout",
+   "company_name": "Redfield Bank",
+   "domain": "redfieldbank-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "7640",
+   "city": "Atlanta",
+   "country": "US",
+   "amount": 215000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 154,
+   "closed_days_ago": 57,
+   "contacts": [
+    [
+     "Marcus Hughes",
+     "VP Engineering",
+     "champion",
+     154
+    ],
+    [
+     "Zoe Kim",
+     "CISO",
+     "decision_maker",
+     149
+    ],
+    [
+     "Ravi Okafor",
+     "IT Security Analyst",
+     "influencer",
+     144
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     130,
+     "Discovery call. The economic decision maker engaged from the first call and set clear success criteria."
+    ],
+    [
+     106,
+     "Demo addressed every stated requirement."
+    ],
+    [
+     81,
+     "Proposal accepted after one round of review."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Stonegate Financial - Enterprise Rollout",
+   "company_name": "Stonegate Financial",
+   "domain": "stonegatefinancial-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "9780",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 315000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 134,
+   "closed_days_ago": 5,
+   "contacts": [
+    [
+     "Mei Mensah",
+     "VP Engineering",
+     "champion",
+     134
+    ],
+    [
+     "Rosa Rossi",
+     "CISO",
+     "decision_maker",
+     129
+    ],
+    [
+     "Daniel Ortiz",
+     "IT Security Analyst",
+     "influencer",
+     124
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     102,
+     "Discovery with a strong internal champion who ran a structured evaluation."
+    ],
+    [
+     70,
+     "Champion brought the decision maker in early, before the proposal."
+    ],
+    [
+     37,
+     "Clear ROI case accepted by the CFO."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Westmere Credit Union - Enterprise Platform",
+   "company_name": "Westmere Credit Union",
+   "domain": "westmerecreditunion-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "10520",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 265000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 97,
+   "closed_days_ago": 55,
+   "contacts": [
+    [
+     "Samuel Rossi",
+     "VP Engineering",
+     "champion",
+     97
+    ],
+    [
+     "Nina Haddad",
+     "CISO",
+     "decision_maker",
+     92
+    ],
+    [
+     "Jonah Singh",
+     "IT Security Analyst",
+     "influencer",
+     87
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     87,
+     "Buyer surfaced budget early in discovery."
+    ],
+    [
+     76,
+     "We matched a modular package to their actual need instead of the full suite."
+    ],
+    [
+     66,
+     "Signed on a quarterly term."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Fairhaven Trust - Platform Expansion",
+   "company_name": "Fairhaven Trust",
+   "domain": "fairhaventrust-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "4870",
+   "city": "Dublin",
+   "country": "IE",
+   "amount": 265000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 118,
+   "closed_days_ago": 4,
+   "contacts": [
+    [
+     "Felix Bauer",
+     "VP Engineering",
+     "champion",
+     118
+    ],
+    [
+     "Elena Keller",
+     "CISO",
+     "decision_maker",
+     113
+    ],
+    [
+     "Daniel Duarte",
+     "IT Security Analyst",
+     "influencer",
+     108
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     90,
+     "Great demo; proposal sent same day, which kept buying momentum."
+    ],
+    [
+     61,
+     "Decision maker engaged within two weeks."
+    ],
+    [
+     33,
+     "Closed on schedule."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Copperleaf Bank - Enterprise Platform",
+   "company_name": "Copperleaf Bank",
+   "domain": "copperleafbank-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "3840",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 135000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 110,
+   "closed_days_ago": 18,
+   "contacts": [
+    [
+     "Grace Kim",
+     "VP Engineering",
+     "champion",
+     110
+    ],
+    [
+     "Kenji Okafor",
+     "CISO",
+     "decision_maker",
+     105
+    ],
+    [
+     "Hannah Kim",
+     "IT Security Analyst",
+     "influencer",
+     100
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     87,
+     "Security review: buyer uses SSO only; SCIM was confirmed not required early in the evaluation."
+    ],
+    [
+     64,
+     "Economic buyer engaged early and ran a TCO comparison."
+    ],
+    [
+     41,
+     "Won on implementation speed and support."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Tidewater Financial - Enterprise Rollout",
+   "company_name": "Tidewater Financial",
+   "domain": "tidewaterfinancial-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "11200",
+   "city": "Denver",
+   "country": "US",
+   "amount": 295000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 120,
+   "closed_days_ago": 35,
+   "contacts": [
+    [
+     "Hannah Bauer",
+     "VP Engineering",
+     "champion",
+     120
+    ],
+    [
+     "Irene Kim",
+     "CISO",
+     "decision_maker",
+     115
+    ],
+    [
+     "Grace Nguyen",
+     "IT Security Analyst",
+     "influencer",
+     110
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     99,
+     "Discovery call. The economic decision maker engaged from the first call and set clear success criteria."
+    ],
+    [
+     78,
+     "Demo addressed every stated requirement."
+    ],
+    [
+     56,
+     "Proposal accepted after one round of review."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Ironbridge Capital - Enterprise Rollout",
+   "company_name": "Ironbridge Capital",
+   "domain": "ironbridgecapital-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "9890",
+   "city": "London",
+   "country": "GB",
+   "amount": 245000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 137,
+   "closed_days_ago": 50,
+   "contacts": [
+    [
+     "Kenji Kowalski",
+     "VP Engineering",
+     "champion",
+     137
+    ],
+    [
+     "Sofia Haddad",
+     "CISO",
+     "decision_maker",
+     132
+    ],
+    [
+     "Owen Ortiz",
+     "IT Security Analyst",
+     "influencer",
+     127
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     115,
+     "Discovery with a strong internal champion who ran a structured evaluation."
+    ],
+    [
+     94,
+     "Champion brought the decision maker in early, before the proposal."
+    ],
+    [
+     72,
+     "Clear ROI case accepted by the CFO."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Maplecrest Bank - Enterprise Rollout",
+   "company_name": "Maplecrest Bank",
+   "domain": "maplecrestbank-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "10130",
+   "city": "Denver",
+   "country": "US",
+   "amount": 310000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 132,
+   "closed_days_ago": 48,
+   "contacts": [
+    [
+     "Hannah Ortiz",
+     "VP Engineering",
+     "champion",
+     132
+    ],
+    [
+     "Jonah Singh",
+     "CISO",
+     "decision_maker",
+     127
+    ],
+    [
+     "Farah Rossi",
+     "IT Security Analyst",
+     "influencer",
+     122
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     111,
+     "Buyer surfaced budget early in discovery."
+    ],
+    [
+     90,
+     "We matched a modular package to their actual need instead of the full suite."
+    ],
+    [
+     69,
+     "Signed on a quarterly term."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Ashford Lending Group - Identity & Access Suite",
+   "company_name": "Ashford Lending Group",
+   "domain": "ashfordlendinggroup-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "4660",
+   "city": "Seattle",
+   "country": "US",
+   "amount": 190000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 85,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Kenji Singh",
+     "VP Engineering",
+     "champion",
+     85
+    ],
+    [
+     "Irene Okafor",
+     "CISO",
+     "decision_maker",
+     80
+    ],
+    [
+     "Victor Lindqvist",
+     "IT Security Analyst",
+     "influencer",
+     75
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     57,
+     "Discovery call. Buyer's security questionnaire asks about SCIM 2.0 provisioning; not answered yet."
+    ],
+    [
+     30,
+     "Champion engaged; no decision maker identified yet."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Crestview Savings - Identity & Access Suite",
+   "company_name": "Crestview Savings",
+   "domain": "crestviewsavings-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "11690",
+   "city": "London",
+   "country": "GB",
+   "amount": 270000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 124,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Owen Moreau",
+     "VP Engineering",
+     "champion",
+     124
+    ],
+    [
+     "Kenji Hughes",
+     "CISO",
+     "decision_maker",
+     119
+    ],
+    [
+     "Sofia Patel",
+     "IT Security Analyst",
+     "influencer",
+     114
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 1,
+   "meetings": [
+    [
+     63,
+     "Technical evaluation in progress; IT Security will review provisioning requirements next week."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Summerfield Trust - Platform Expansion",
+   "company_name": "Summerfield Trust",
+   "domain": "summerfieldtrust-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "7970",
+   "city": "Denver",
+   "country": "US",
+   "amount": 295000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 141,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Clara Costa",
+     "VP Engineering",
+     "champion",
+     141
+    ],
+    [
+     "Andre Ramirez",
+     "CISO",
+     "decision_maker",
+     136
+    ],
+    [
+     "Irene Hughes",
+     "IT Security Analyst",
+     "influencer",
+     131
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     95,
+     "Discovery call. Buyer's security questionnaire asks about SCIM 2.0 provisioning; not answered yet."
+    ],
+    [
+     48,
+     "Champion engaged; no decision maker identified yet."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Brightwater Bancorp - Enterprise Rollout",
+   "company_name": "Brightwater Bancorp",
+   "domain": "brightwaterbancorp-sample.com",
+   "industry": "Financial Services",
+   "segment": "enterprise",
+   "employee_count": "3820",
+   "city": "Dublin",
+   "country": "IE",
+   "amount": 275000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 110,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Lucas Haddad",
+     "VP Engineering",
+     "champion",
+     110
+    ],
+    [
+     "Nina Kim",
+     "CISO",
+     "decision_maker",
+     105
+    ],
+    [
+     "Marcus Patel",
+     "IT Security Analyst",
+     "influencer",
+     100
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 2,
+   "meetings": [
+    [
+     56,
+     "Technical evaluation in progress; IT Security will review provisioning requirements next week."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Riverbend Health System - Enterprise Platform",
+   "company_name": "Riverbend Health System",
+   "domain": "riverbendhealthsystem-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "7810",
+   "city": "Denver",
+   "country": "US",
+   "amount": 165000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 91,
+   "closed_days_ago": 29,
+   "contacts": [
+    [
+     "Priya Adeyemi",
+     "VP Engineering",
+     "champion",
+     91
+    ],
+    [
+     "Felix Fischer",
+     "CISO",
+     "decision_maker",
+     86
+    ],
+    [
+     "Victor Chen",
+     "IT Security Analyst",
+     "influencer",
+     81
+    ]
+   ],
+   "story": "competitor",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     76,
+     "Discovery call, buyer comparing three vendors."
+    ],
+    [
+     60,
+     "Demo went well on the core workflow, but buyer asked for industry-specific templates we don't have."
+    ],
+    [
+     45,
+     "Buyer told us they selected a competitor, a vertical specialist with purpose-built workflows for their industry."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost to a competitor - vertical specialist with purpose-built workflows."
+  },
+  {
+   "name": "Cedar Valley Medical - Identity & Access Suite",
+   "company_name": "Cedar Valley Medical",
+   "domain": "cedarvalleymedical-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "2880",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 175000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 103,
+   "closed_days_ago": 22,
+   "contacts": [
+    [
+     "Jonah Kowalski",
+     "VP Engineering",
+     "champion",
+     103
+    ],
+    [
+     "Leah Varga",
+     "CISO",
+     "decision_maker",
+     98
+    ],
+    [
+     "Farah Lindqvist",
+     "IT Security Analyst",
+     "influencer",
+     93
+    ]
+   ],
+   "story": "competitor",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     83,
+     "Discovery call, buyer comparing three vendors."
+    ],
+    [
+     63,
+     "Demo went well on the core workflow, but buyer asked for industry-specific templates we don't have."
+    ],
+    [
+     42,
+     "Buyer told us they selected a competitor, a vertical specialist with purpose-built workflows for their industry."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost to a competitor - vertical specialist with purpose-built workflows."
+  },
+  {
+   "name": "Northfield Clinics - Platform Expansion",
+   "company_name": "Northfield Clinics",
+   "domain": "northfieldclinics-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "2190",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 265000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 142,
+   "closed_days_ago": 19,
+   "contacts": [
+    [
+     "Victor Lindqvist",
+     "VP Engineering",
+     "champion",
+     142
+    ],
+    [
+     "Lucas Abara",
+     "CISO",
+     "decision_maker",
+     137
+    ],
+    [
+     "Clara Lindqvist",
+     "IT Security Analyst",
+     "influencer",
+     132
+    ]
+   ],
+   "story": "competitor",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     111,
+     "Discovery call, buyer comparing three vendors."
+    ],
+    [
+     81,
+     "Demo went well on the core workflow, but buyer asked for industry-specific templates we don't have."
+    ],
+    [
+     50,
+     "Buyer told us they selected a competitor, a vertical specialist with purpose-built workflows for their industry."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost to a competitor - vertical specialist with purpose-built workflows."
+  },
+  {
+   "name": "Sagebrush Health - Enterprise Platform",
+   "company_name": "Sagebrush Health",
+   "domain": "sagebrushhealth-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "4410",
+   "city": "Denver",
+   "country": "US",
+   "amount": 315000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 147,
+   "closed_days_ago": 46,
+   "contacts": [
+    [
+     "Irene Lindqvist",
+     "VP Engineering",
+     "champion",
+     147
+    ],
+    [
+     "Mei Novak",
+     "CISO",
+     "decision_maker",
+     142
+    ],
+    [
+     "Marcus Sato",
+     "IT Security Analyst",
+     "influencer",
+     137
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     127,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     107,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     86,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     66,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     97,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Lakeview Hospital Group - Enterprise Platform",
+   "company_name": "Lakeview Hospital Group",
+   "domain": "lakeviewhospitalgroup-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "4380",
+   "city": "Atlanta",
+   "country": "US",
+   "amount": 295000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 116,
+   "closed_days_ago": 36,
+   "contacts": [
+    [
+     "Jonah Novak",
+     "VP Engineering",
+     "champion",
+     116
+    ],
+    [
+     "Daniel Singh",
+     "CISO",
+     "decision_maker",
+     111
+    ],
+    [
+     "Samuel Bauer",
+     "IT Security Analyst",
+     "influencer",
+     106
+    ]
+   ],
+   "story": "scim_gap",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     100,
+     "Discovery call. Buyer described an identity-governance initiative and listed security requirements for all new vendors."
+    ],
+    [
+     84,
+     "Technical deep-dive with IT Security. They asked whether we support automated user provisioning and deprovisioning via SCIM for their identity provider."
+    ],
+    [
+     68,
+     "Security review. The CISO asked directly: 'Do you support SCIM 2.0?' We confirmed SCIM is not supported today, only manual CSV provisioning."
+    ],
+    [
+     52,
+     "Buyer's security team flagged manual provisioning as a blocker for their access-review audit control."
+    ]
+   ],
+   "notes": [
+    [
+     76,
+     "Buyer's requirements doc lists SCIM 2.0 provisioning as mandatory, tier 1."
+    ]
+   ],
+   "close_reason_raw": "Lost - security review failed because SCIM / automated provisioning is not supported."
+  },
+  {
+   "name": "Pinehurst Medical Partners - Identity & Access Suite",
+   "company_name": "Pinehurst Medical Partners",
+   "domain": "pinehurstmedicalpartners-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "5610",
+   "city": "Denver",
+   "country": "US",
+   "amount": 130000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 154,
+   "closed_days_ago": 7,
+   "contacts": [
+    [
+     "Zoe Ibrahim",
+     "VP Engineering",
+     "champion",
+     154
+    ],
+    [
+     "Samuel Bauer",
+     "CISO",
+     "decision_maker",
+     149
+    ],
+    [
+     "Grace Brennan",
+     "IT Security Analyst",
+     "influencer",
+     144
+    ]
+   ],
+   "story": "late_dm",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     117,
+     "Discovery with the champion, strong interest in the platform and a clear use case."
+    ],
+    [
+     81,
+     "Demo for the working team went well; champion asked for a proposal."
+    ],
+    [
+     44,
+     "Proposal review. The economic buyer joined for the first time and questioned why this was a priority this year."
+    ]
+   ],
+   "notes": [
+    [
+     81,
+     "Internal note: we never met the economic buyer before the proposal stage."
+    ]
+   ],
+   "close_reason_raw": "Lost - decision maker joined late and did not prioritize the project."
+  },
+  {
+   "name": "Meadowbrook Health - Enterprise Rollout",
+   "company_name": "Meadowbrook Health",
+   "domain": "meadowbrookhealth-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "5340",
+   "city": "Dublin",
+   "country": "IE",
+   "amount": 165000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 148,
+   "closed_days_ago": 16,
+   "contacts": [
+    [
+     "Samuel Keller",
+     "VP Engineering",
+     "champion",
+     148
+    ],
+    [
+     "Victor Sato",
+     "CISO",
+     "decision_maker",
+     143
+    ],
+    [
+     "Owen Patel",
+     "IT Security Analyst",
+     "influencer",
+     138
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     115,
+     "Discovery call. The economic decision maker engaged from the first call and set clear success criteria."
+    ],
+    [
+     82,
+     "Demo addressed every stated requirement."
+    ],
+    [
+     49,
+     "Proposal accepted after one round of review."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Summit Ridge Care - Platform Expansion",
+   "company_name": "Summit Ridge Care",
+   "domain": "summitridgecare-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "8060",
+   "city": "Chicago",
+   "country": "US",
+   "amount": 165000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 73,
+   "closed_days_ago": 37,
+   "contacts": [
+    [
+     "Farah Ortiz",
+     "VP Engineering",
+     "champion",
+     73
+    ],
+    [
+     "Nina Abara",
+     "CISO",
+     "decision_maker",
+     68
+    ],
+    [
+     "Mei Fischer",
+     "IT Security Analyst",
+     "influencer",
+     63
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     64,
+     "Discovery with a strong internal champion who ran a structured evaluation."
+    ],
+    [
+     55,
+     "Champion brought the decision maker in early, before the proposal."
+    ],
+    [
+     46,
+     "Clear ROI case accepted by the CFO."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Willowcreek Health Network - Identity & Access Suite",
+   "company_name": "Willowcreek Health Network",
+   "domain": "willowcreekhealthnetwork-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "5710",
+   "city": "Austin",
+   "country": "US",
+   "amount": 285000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 117,
+   "closed_days_ago": 19,
+   "contacts": [
+    [
+     "Leah Moreau",
+     "VP Engineering",
+     "champion",
+     117
+    ],
+    [
+     "Marcus Bauer",
+     "CISO",
+     "decision_maker",
+     112
+    ],
+    [
+     "Hannah Keller",
+     "IT Security Analyst",
+     "influencer",
+     107
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     93,
+     "Buyer surfaced budget early in discovery."
+    ],
+    [
+     68,
+     "We matched a modular package to their actual need instead of the full suite."
+    ],
+    [
+     44,
+     "Signed on a quarterly term."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Blue Heron Medical - Enterprise Platform",
+   "company_name": "Blue Heron Medical",
+   "domain": "blueheronmedical-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "6800",
+   "city": "Boston",
+   "country": "US",
+   "amount": 275000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 150,
+   "closed_days_ago": 59,
+   "contacts": [
+    [
+     "Kenji Brennan",
+     "VP Engineering",
+     "champion",
+     150
+    ],
+    [
+     "Rosa Mensah",
+     "CISO",
+     "decision_maker",
+     145
+    ],
+    [
+     "Felix Ortiz",
+     "IT Security Analyst",
+     "influencer",
+     140
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     127,
+     "Great demo; proposal sent same day, which kept buying momentum."
+    ],
+    [
+     105,
+     "Decision maker engaged within two weeks."
+    ],
+    [
+     82,
+     "Closed on schedule."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Starling Health - Platform Expansion",
+   "company_name": "Starling Health",
+   "domain": "starlinghealth-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "3700",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 240000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 130,
+   "closed_days_ago": 12,
+   "contacts": [
+    [
+     "Ethan Adeyemi",
+     "VP Engineering",
+     "champion",
+     130
+    ],
+    [
+     "Hannah Ortiz",
+     "CISO",
+     "decision_maker",
+     125
+    ],
+    [
+     "Clara Larsen",
+     "IT Security Analyst",
+     "influencer",
+     120
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     101,
+     "Security review: buyer uses SSO only; SCIM was confirmed not required early in the evaluation."
+    ],
+    [
+     71,
+     "Economic buyer engaged early and ran a TCO comparison."
+    ],
+    [
+     42,
+     "Won on implementation speed and support."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Evergreen Care Alliance - Enterprise Platform",
+   "company_name": "Evergreen Care Alliance",
+   "domain": "evergreencarealliance-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "1870",
+   "city": "Austin",
+   "country": "US",
+   "amount": 225000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 75,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Farah Novak",
+     "VP Engineering",
+     "champion",
+     75
+    ],
+    [
+     "Lucas Moreau",
+     "CISO",
+     "decision_maker",
+     70
+    ],
+    [
+     "Samuel Nguyen",
+     "IT Security Analyst",
+     "influencer",
+     65
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 2,
+   "meetings": [
+    [
+     51,
+     "Discovery call. Buyer's security questionnaire asks about SCIM 2.0 provisioning; not answered yet."
+    ],
+    [
+     26,
+     "Champion engaged; no decision maker identified yet."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Halcyon Health - Enterprise Rollout",
+   "company_name": "Halcyon Health",
+   "domain": "halcyonhealth-sample.com",
+   "industry": "Healthcare",
+   "segment": "enterprise",
+   "employee_count": "3890",
+   "city": "Seattle",
+   "country": "US",
+   "amount": 170000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 100,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Omar Bauer",
+     "VP Engineering",
+     "champion",
+     100
+    ],
+    [
+     "Aisha Keller",
+     "CISO",
+     "decision_maker",
+     95
+    ],
+    [
+     "Leah Hughes",
+     "IT Security Analyst",
+     "influencer",
+     90
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     51,
+     "Technical evaluation in progress; IT Security will review provisioning requirements next week."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Brightloop - Analytics Suite",
+   "company_name": "Brightloop",
+   "domain": "brightloop-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "650",
+   "city": "Dublin",
+   "country": "IE",
+   "amount": 54000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 97,
+   "closed_days_ago": 52,
+   "contacts": [
+    [
+     "Samuel Fischer",
+     "Head of Operations",
+     "champion",
+     97
+    ],
+    [
+     "Priya Lindqvist",
+     "CFO",
+     "decision_maker",
+     92
+    ],
+    [
+     "Clara Singh",
+     "Operations Manager",
+     "end_user",
+     87
+    ]
+   ],
+   "story": "packaging",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     86,
+     "Discovery call. Buyer only needed one module for a single team."
+    ],
+    [
+     75,
+     "Proposal sent for the full-suite bundle, which is the only package we sell to this segment."
+    ],
+    [
+     63,
+     "Buyer asked for a modular or a la carte option and a quarterly term; we only offer annual-only contracts."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost - rigid full-suite packaging and annual-only contract term did not fit the buyer."
+  },
+  {
+   "name": "Quillstack - Operations Platform",
+   "company_name": "Quillstack",
+   "domain": "quillstack-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "210",
+   "city": "Austin",
+   "country": "US",
+   "amount": 32000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 108,
+   "closed_days_ago": 48,
+   "contacts": [
+    [
+     "Nina Novak",
+     "Head of Operations",
+     "champion",
+     108
+    ],
+    [
+     "Clara Mensah",
+     "CFO",
+     "decision_maker",
+     103
+    ],
+    [
+     "Felix Ortiz",
+     "Operations Manager",
+     "end_user",
+     98
+    ]
+   ],
+   "story": "packaging",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     93,
+     "Discovery call. Buyer only needed one module for a single team."
+    ],
+    [
+     78,
+     "Proposal sent for the full-suite bundle, which is the only package we sell to this segment."
+    ],
+    [
+     63,
+     "Buyer asked for a modular or a la carte option and a quarterly term; we only offer annual-only contracts."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost - rigid full-suite packaging and annual-only contract term did not fit the buyer."
+  },
+  {
+   "name": "Nimbusly - Team Plan",
+   "company_name": "Nimbusly",
+   "domain": "nimbusly-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "390",
+   "city": "Austin",
+   "country": "US",
+   "amount": 39000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 150,
+   "closed_days_ago": 7,
+   "contacts": [
+    [
+     "Jonah Ibrahim",
+     "Head of Operations",
+     "champion",
+     150
+    ],
+    [
+     "Hannah Haddad",
+     "CFO",
+     "decision_maker",
+     145
+    ],
+    [
+     "Daniel Mensah",
+     "Operations Manager",
+     "end_user",
+     140
+    ]
+   ],
+   "story": "packaging",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     114,
+     "Discovery call. Buyer only needed one module for a single team."
+    ],
+    [
+     79,
+     "Proposal sent for the full-suite bundle, which is the only package we sell to this segment."
+    ],
+    [
+     43,
+     "Buyer asked for a modular or a la carte option and a quarterly term; we only offer annual-only contracts."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost - rigid full-suite packaging and annual-only contract term did not fit the buyer."
+  },
+  {
+   "name": "Taskwise - Team Plan",
+   "company_name": "Taskwise",
+   "domain": "taskwise-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "580",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 45000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 121,
+   "closed_days_ago": 36,
+   "contacts": [
+    [
+     "Grace Lindqvist",
+     "Head of Operations",
+     "champion",
+     121
+    ],
+    [
+     "Clara Lindqvist",
+     "CFO",
+     "decision_maker",
+     116
+    ],
+    [
+     "Felix Nguyen",
+     "Operations Manager",
+     "end_user",
+     111
+    ]
+   ],
+   "story": "pricing",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     100,
+     "Discovery call, buyer liked the product and the onboarding story."
+    ],
+    [
+     79,
+     "Proposal walkthrough. Buyer said our list price is 28% above their budget for this year."
+    ],
+    [
+     57,
+     "We could not offer a smaller tier; buyer picked a cheaper tool."
+    ]
+   ],
+   "notes": [
+    [
+     79,
+     "Budget was never discussed in discovery."
+    ]
+   ],
+   "close_reason_raw": "Lost - price above the buyer's budget."
+  },
+  {
+   "name": "Orbitly - Team Plan",
+   "company_name": "Orbitly",
+   "domain": "orbitly-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "320",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 34000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 127,
+   "closed_days_ago": 30,
+   "contacts": [
+    [
+     "Irene Abara",
+     "Head of Operations",
+     "champion",
+     127
+    ],
+    [
+     "Leah Walsh",
+     "CFO",
+     "decision_maker",
+     122
+    ],
+    [
+     "Kenji Hughes",
+     "Operations Manager",
+     "end_user",
+     117
+    ]
+   ],
+   "story": "pricing",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     103,
+     "Discovery call, buyer liked the product and the onboarding story."
+    ],
+    [
+     79,
+     "Proposal walkthrough. Buyer said our list price is 42% above their budget for this year."
+    ],
+    [
+     54,
+     "We could not offer a smaller tier; buyer picked a cheaper tool."
+    ]
+   ],
+   "notes": [
+    [
+     79,
+     "Budget was never discussed in discovery."
+    ]
+   ],
+   "close_reason_raw": "Lost - price above the buyer's budget."
+  },
+  {
+   "name": "Ledgerleaf - Analytics Suite",
+   "company_name": "Ledgerleaf",
+   "domain": "ledgerleaf-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "400",
+   "city": "Seattle",
+   "country": "US",
+   "amount": 75000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 126,
+   "closed_days_ago": 25,
+   "contacts": [
+    [
+     "Kenji Ortiz",
+     "Head of Operations",
+     "champion",
+     126
+    ],
+    [
+     "Lucas Adeyemi",
+     "CFO",
+     "decision_maker",
+     121
+    ],
+    [
+     "Lucas Sato",
+     "Operations Manager",
+     "end_user",
+     116
+    ]
+   ],
+   "story": "late_dm",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     101,
+     "Discovery with the champion, strong interest in the platform and a clear use case."
+    ],
+    [
+     76,
+     "Demo for the working team went well; champion asked for a proposal."
+    ],
+    [
+     50,
+     "Proposal review. The economic buyer joined for the first time and questioned why this was a priority this year."
+    ]
+   ],
+   "notes": [
+    [
+     76,
+     "Internal note: we never met the economic buyer before the proposal stage."
+    ]
+   ],
+   "close_reason_raw": "Lost - decision maker joined late and did not prioritize the project."
+  },
+  {
+   "name": "Frameworkd - Team Plan",
+   "company_name": "Frameworkd",
+   "domain": "frameworkd-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "350",
+   "city": "Boston",
+   "country": "US",
+   "amount": 62000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 86,
+   "closed_days_ago": 20,
+   "contacts": [
+    [
+     "Andre Moreau",
+     "Head of Operations",
+     "champion",
+     86
+    ],
+    [
+     "Grace Fischer",
+     "CFO",
+     "decision_maker",
+     81
+    ],
+    [
+     "Grace Duarte",
+     "Operations Manager",
+     "end_user",
+     76
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     70,
+     "Discovery call. The economic decision maker engaged from the first call and set clear success criteria."
+    ],
+    [
+     53,
+     "Demo addressed every stated requirement."
+    ],
+    [
+     37,
+     "Proposal accepted after one round of review."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Pulsegrid - Operations Platform",
+   "company_name": "Pulsegrid",
+   "domain": "pulsegrid-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "640",
+   "city": "London",
+   "country": "GB",
+   "amount": 69000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 105,
+   "closed_days_ago": 26,
+   "contacts": [
+    [
+     "Caleb Patel",
+     "Head of Operations",
+     "champion",
+     105
+    ],
+    [
+     "Leah Walsh",
+     "CFO",
+     "decision_maker",
+     100
+    ],
+    [
+     "Felix Patel",
+     "Operations Manager",
+     "end_user",
+     95
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     85,
+     "Discovery with a strong internal champion who ran a structured evaluation."
+    ],
+    [
+     66,
+     "Champion brought the decision maker in early, before the proposal."
+    ],
+    [
+     46,
+     "Clear ROI case accepted by the CFO."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Shipcraft - Operations Platform",
+   "company_name": "Shipcraft",
+   "domain": "shipcraft-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "210",
+   "city": "London",
+   "country": "GB",
+   "amount": 77000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 106,
+   "closed_days_ago": 10,
+   "contacts": [
+    [
+     "Farah Duarte",
+     "Head of Operations",
+     "champion",
+     106
+    ],
+    [
+     "Marcus Kim",
+     "CFO",
+     "decision_maker",
+     101
+    ],
+    [
+     "Ravi Okafor",
+     "Operations Manager",
+     "end_user",
+     96
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     82,
+     "Buyer surfaced budget early in discovery."
+    ],
+    [
+     58,
+     "We matched a modular package to their actual need instead of the full suite."
+    ],
+    [
+     34,
+     "Signed on a quarterly term."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Datavane - Operations Platform",
+   "company_name": "Datavane",
+   "domain": "datavane-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "400",
+   "city": "London",
+   "country": "GB",
+   "amount": 58000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 153,
+   "closed_days_ago": 11,
+   "contacts": [
+    [
+     "Marcus Larsen",
+     "Head of Operations",
+     "champion",
+     153
+    ],
+    [
+     "Marcus Hughes",
+     "CFO",
+     "decision_maker",
+     148
+    ],
+    [
+     "Leah Chen",
+     "Operations Manager",
+     "end_user",
+     143
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     118,
+     "Great demo; proposal sent same day, which kept buying momentum."
+    ],
+    [
+     82,
+     "Decision maker engaged within two weeks."
+    ],
+    [
+     47,
+     "Closed on schedule."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Formsmith - Operations Platform",
+   "company_name": "Formsmith",
+   "domain": "formsmith-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "490",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 88000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 81,
+   "closed_days_ago": 58,
+   "contacts": [
+    [
+     "Tom Sato",
+     "Head of Operations",
+     "champion",
+     81
+    ],
+    [
+     "Ravi Bauer",
+     "CFO",
+     "decision_maker",
+     76
+    ],
+    [
+     "Tom Costa",
+     "Operations Manager",
+     "end_user",
+     71
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     75,
+     "Security review: buyer uses SSO only; SCIM was confirmed not required early in the evaluation."
+    ],
+    [
+     70,
+     "Economic buyer engaged early and ran a TCO comparison."
+    ],
+    [
+     64,
+     "Won on implementation speed and support."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Relaybase - Operations Platform",
+   "company_name": "Relaybase",
+   "domain": "relaybase-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "200",
+   "city": "Atlanta",
+   "country": "US",
+   "amount": 71000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 119,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Owen Abara",
+     "Head of Operations",
+     "champion",
+     119
+    ],
+    [
+     "Marcus Larsen",
+     "CFO",
+     "decision_maker",
+     114
+    ],
+    [
+     "Daniel Keller",
+     "Operations Manager",
+     "end_user",
+     109
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     61,
+     "Discovery done; buyer asked whether we offer a smaller module instead of the full suite."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Clearpath Apps - Analytics Suite",
+   "company_name": "Clearpath Apps",
+   "domain": "clearpathapps-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "630",
+   "city": "Atlanta",
+   "country": "US",
+   "amount": 79000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 143,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Victor Singh",
+     "Head of Operations",
+     "champion",
+     143
+    ],
+    [
+     "Rosa Brennan",
+     "CFO",
+     "decision_maker",
+     138
+    ],
+    [
+     "Ravi Adeyemi",
+     "Operations Manager",
+     "end_user",
+     133
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 2,
+   "meetings": [
+    [
+     73,
+     "Demo scheduled; CFO not yet involved."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Wavecast - Analytics Suite",
+   "company_name": "Wavecast",
+   "domain": "wavecast-sample.com",
+   "industry": "SaaS",
+   "segment": "mid_market",
+   "employee_count": "490",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 64000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 114,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Grace Keller",
+     "Head of Operations",
+     "champion",
+     114
+    ],
+    [
+     "Marcus Novak",
+     "CFO",
+     "decision_maker",
+     109
+    ],
+    [
+     "Felix Patel",
+     "Operations Manager",
+     "end_user",
+     104
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 2,
+   "meetings": [
+    [
+     58,
+     "Discovery done; buyer asked whether we offer a smaller module instead of the full suite."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Juniper & Co - Team Plan",
+   "company_name": "Juniper & Co",
+   "domain": "juniperco-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "40",
+   "city": "Seattle",
+   "country": "US",
+   "amount": 15000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 81,
+   "closed_days_ago": 33,
+   "contacts": [
+    [
+     "Grace Patel",
+     "Founder",
+     "decision_maker",
+     81
+    ],
+    [
+     "Victor Kim",
+     "Office Manager",
+     "end_user",
+     76
+    ]
+   ],
+   "story": "pricing",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     69,
+     "Discovery call, buyer liked the product and the onboarding story."
+    ],
+    [
+     57,
+     "Proposal walkthrough. Buyer said our list price is 34% above their budget for this year."
+    ],
+    [
+     45,
+     "We could not offer a smaller tier; buyer picked a cheaper tool."
+    ]
+   ],
+   "notes": [
+    [
+     57,
+     "Budget was never discussed in discovery."
+    ]
+   ],
+   "close_reason_raw": "Lost - price above the buyer's budget."
+  },
+  {
+   "name": "Copper Kettle Goods - Team Plan",
+   "company_name": "Copper Kettle Goods",
+   "domain": "copperkettlegoods-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Boston",
+   "country": "US",
+   "amount": 22000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 136,
+   "closed_days_ago": 56,
+   "contacts": [
+    [
+     "Grace Nguyen",
+     "Founder",
+     "decision_maker",
+     136
+    ],
+    [
+     "Victor Ortiz",
+     "Office Manager",
+     "end_user",
+     131
+    ]
+   ],
+   "story": "pricing",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     116,
+     "Discovery call, buyer liked the product and the onboarding story."
+    ],
+    [
+     96,
+     "Proposal walkthrough. Buyer said our list price is 38% above their budget for this year."
+    ],
+    [
+     76,
+     "We could not offer a smaller tier; buyer picked a cheaper tool."
+    ]
+   ],
+   "notes": [
+    [
+     96,
+     "Budget was never discussed in discovery."
+    ]
+   ],
+   "close_reason_raw": "Lost - price above the buyer's budget."
+  },
+  {
+   "name": "Northwind Outfitters - Starter Plan",
+   "company_name": "Northwind Outfitters",
+   "domain": "northwindoutfitters-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 7000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 73,
+   "closed_days_ago": 26,
+   "contacts": [
+    [
+     "Ethan Sato",
+     "Founder",
+     "decision_maker",
+     73
+    ],
+    [
+     "Marcus Kowalski",
+     "Office Manager",
+     "end_user",
+     68
+    ]
+   ],
+   "story": "pricing",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     61,
+     "Discovery call, buyer liked the product and the onboarding story."
+    ],
+    [
+     50,
+     "Proposal walkthrough. Buyer said our list price is 32% above their budget for this year."
+    ],
+    [
+     38,
+     "We could not offer a smaller tier; buyer picked a cheaper tool."
+    ]
+   ],
+   "notes": [
+    [
+     50,
+     "Budget was never discussed in discovery."
+    ]
+   ],
+   "close_reason_raw": "Lost - price above the buyer's budget."
+  },
+  {
+   "name": "Fernleaf Home - Team Plan",
+   "company_name": "Fernleaf Home",
+   "domain": "fernleafhome-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "40",
+   "city": "Austin",
+   "country": "US",
+   "amount": 14000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 150,
+   "closed_days_ago": 51,
+   "contacts": [
+    [
+     "Caleb Mensah",
+     "Founder",
+     "decision_maker",
+     150
+    ],
+    [
+     "Jonah Hughes",
+     "Office Manager",
+     "end_user",
+     145
+    ]
+   ],
+   "story": "proposal_delay",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     125,
+     "Great demo, buyer ready to move and asked for a proposal the same week."
+    ],
+    [
+     101,
+     "Proposal sent 8 days late because of an internal approval backlog on our side."
+    ],
+    [
+     76,
+     "Buyer signed with another vendor in the meantime."
+    ]
+   ],
+   "notes": [
+    [
+     101,
+     "Internal note: proposal was stuck in manager review past the SLA."
+    ]
+   ],
+   "close_reason_raw": "Lost - proposal delayed by internal approval backlog; buyer moved on."
+  },
+  {
+   "name": "Bluebell Boutique - Standard Plan",
+   "company_name": "Bluebell Boutique",
+   "domain": "bluebellboutique-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 9000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 127,
+   "closed_days_ago": 24,
+   "contacts": [
+    [
+     "Tom Duarte",
+     "Founder",
+     "decision_maker",
+     127
+    ],
+    [
+     "Tom Singh",
+     "Office Manager",
+     "end_user",
+     122
+    ]
+   ],
+   "story": "proposal_delay",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     101,
+     "Great demo, buyer ready to move and asked for a proposal the same week."
+    ],
+    [
+     76,
+     "Proposal sent 8 days late because of an internal approval backlog on our side."
+    ],
+    [
+     50,
+     "Buyer signed with another vendor in the meantime."
+    ]
+   ],
+   "notes": [
+    [
+     76,
+     "Internal note: proposal was stuck in manager review past the SLA."
+    ]
+   ],
+   "close_reason_raw": "Lost - proposal delayed by internal approval backlog; buyer moved on."
+  },
+  {
+   "name": "Harbor Street Market - Standard Plan",
+   "company_name": "Harbor Street Market",
+   "domain": "harborstreetmarket-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "20",
+   "city": "Boston",
+   "country": "US",
+   "amount": 16000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 111,
+   "closed_days_ago": 55,
+   "contacts": [
+    [
+     "Zoe Haddad",
+     "Founder",
+     "decision_maker",
+     111
+    ],
+    [
+     "Elena Walsh",
+     "Office Manager",
+     "end_user",
+     106
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     97,
+     "Discovery call. The economic decision maker engaged from the first call and set clear success criteria."
+    ],
+    [
+     83,
+     "Demo addressed every stated requirement."
+    ],
+    [
+     69,
+     "Proposal accepted after one round of review."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Oak & Anchor Supply - Standard Plan",
+   "company_name": "Oak & Anchor Supply",
+   "domain": "oakanchorsupply-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "40",
+   "city": "Dublin",
+   "country": "IE",
+   "amount": 23000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 157,
+   "closed_days_ago": 41,
+   "contacts": [
+    [
+     "Jonah Kowalski",
+     "Founder",
+     "decision_maker",
+     157
+    ],
+    [
+     "Kenji Patel",
+     "Office Manager",
+     "end_user",
+     152
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     128,
+     "Discovery with a strong internal champion who ran a structured evaluation."
+    ],
+    [
+     99,
+     "Champion brought the decision maker in early, before the proposal."
+    ],
+    [
+     70,
+     "Clear ROI case accepted by the CFO."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Sundial Gifts - Standard Plan",
+   "company_name": "Sundial Gifts",
+   "domain": "sundialgifts-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "40",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 14500,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 153,
+   "closed_days_ago": 44,
+   "contacts": [
+    [
+     "Ethan Adeyemi",
+     "Founder",
+     "decision_maker",
+     153
+    ],
+    [
+     "Daniel Larsen",
+     "Office Manager",
+     "end_user",
+     148
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     126,
+     "Buyer surfaced budget early in discovery."
+    ],
+    [
+     99,
+     "We matched a modular package to their actual need instead of the full suite."
+    ],
+    [
+     71,
+     "Signed on a quarterly term."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Marigold Mercantile - Team Plan",
+   "company_name": "Marigold Mercantile",
+   "domain": "marigoldmercantile-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "50",
+   "city": "Boston",
+   "country": "US",
+   "amount": 16000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 77,
+   "closed_days_ago": 12,
+   "contacts": [
+    [
+     "Ethan Ramirez",
+     "Founder",
+     "decision_maker",
+     77
+    ],
+    [
+     "Omar Bauer",
+     "Office Manager",
+     "end_user",
+     72
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     61,
+     "Great demo; proposal sent same day, which kept buying momentum."
+    ],
+    [
+     45,
+     "Decision maker engaged within two weeks."
+    ],
+    [
+     28,
+     "Closed on schedule."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Pebble Lane Shoes - Essentials",
+   "company_name": "Pebble Lane Shoes",
+   "domain": "pebblelaneshoes-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "40",
+   "city": "Dublin",
+   "country": "IE",
+   "amount": 15500,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 74,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Andre Rossi",
+     "Founder",
+     "decision_maker",
+     74
+    ],
+    [
+     "Ethan Costa",
+     "Office Manager",
+     "end_user",
+     69
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 2,
+   "meetings": [
+    [
+     38,
+     "Founder interested; asked for pricing before the demo."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Tallgrass Provisions - Starter Plan",
+   "company_name": "Tallgrass Provisions",
+   "domain": "tallgrassprovisions-sample.com",
+   "industry": "Retail",
+   "segment": "smb",
+   "employee_count": "40",
+   "city": "Denver",
+   "country": "US",
+   "amount": 6000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 100,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Zoe Kowalski",
+     "Founder",
+     "decision_maker",
+     100
+    ],
+    [
+     "Leah Costa",
+     "Office Manager",
+     "end_user",
+     95
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     51,
+     "Founder interested; asked for pricing before the demo."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Ironclad Fabrication - Analytics Suite",
+   "company_name": "Ironclad Fabrication",
+   "domain": "ironcladfabrication-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "720",
+   "city": "Denver",
+   "country": "US",
+   "amount": 35000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 124,
+   "closed_days_ago": 43,
+   "contacts": [
+    [
+     "Daniel Nguyen",
+     "Head of Operations",
+     "champion",
+     124
+    ],
+    [
+     "Maya Sato",
+     "CFO",
+     "decision_maker",
+     119
+    ],
+    [
+     "Rosa Keller",
+     "Operations Manager",
+     "end_user",
+     114
+    ]
+   ],
+   "story": "competitor",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     104,
+     "Discovery call, buyer comparing three vendors."
+    ],
+    [
+     84,
+     "Demo went well on the core workflow, but buyer asked for industry-specific templates we don't have."
+    ],
+    [
+     63,
+     "Buyer told us they selected a competitor, a vertical specialist with purpose-built workflows for their industry."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost to a competitor - vertical specialist with purpose-built workflows."
+  },
+  {
+   "name": "Precision Forge Works - Team Plan",
+   "company_name": "Precision Forge Works",
+   "domain": "precisionforgeworks-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "690",
+   "city": "Denver",
+   "country": "US",
+   "amount": 79000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 110,
+   "closed_days_ago": 41,
+   "contacts": [
+    [
+     "Sofia Chen",
+     "Head of Operations",
+     "champion",
+     110
+    ],
+    [
+     "Ravi Patel",
+     "CFO",
+     "decision_maker",
+     105
+    ],
+    [
+     "Marcus Sato",
+     "Operations Manager",
+     "end_user",
+     100
+    ]
+   ],
+   "story": "competitor",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     93,
+     "Discovery call, buyer comparing three vendors."
+    ],
+    [
+     76,
+     "Demo went well on the core workflow, but buyer asked for industry-specific templates we don't have."
+    ],
+    [
+     58,
+     "Buyer told us they selected a competitor, a vertical specialist with purpose-built workflows for their industry."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost to a competitor - vertical specialist with purpose-built workflows."
+  },
+  {
+   "name": "Delta Valve Systems - Team Plan",
+   "company_name": "Delta Valve Systems",
+   "domain": "deltavalvesystems-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "440",
+   "city": "Denver",
+   "country": "US",
+   "amount": 55000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 141,
+   "closed_days_ago": 5,
+   "contacts": [
+    [
+     "Leah Bauer",
+     "Head of Operations",
+     "champion",
+     141
+    ],
+    [
+     "Hannah Chen",
+     "CFO",
+     "decision_maker",
+     136
+    ],
+    [
+     "Marcus Costa",
+     "Operations Manager",
+     "end_user",
+     131
+    ]
+   ],
+   "story": "packaging",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     107,
+     "Discovery call. Buyer only needed one module for a single team."
+    ],
+    [
+     73,
+     "Proposal sent for the full-suite bundle, which is the only package we sell to this segment."
+    ],
+    [
+     39,
+     "Buyer asked for a modular or a la carte option and a quarterly term; we only offer annual-only contracts."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Lost - rigid full-suite packaging and annual-only contract term did not fit the buyer."
+  },
+  {
+   "name": "Northstar Composites - Analytics Suite",
+   "company_name": "Northstar Composites",
+   "domain": "northstarcomposites-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "280",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 72000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 156,
+   "closed_days_ago": 11,
+   "contacts": [
+    [
+     "Felix Fischer",
+     "Head of Operations",
+     "champion",
+     156
+    ],
+    [
+     "Lucas Fischer",
+     "CFO",
+     "decision_maker",
+     151
+    ],
+    [
+     "Aisha Kowalski",
+     "Operations Manager",
+     "end_user",
+     146
+    ]
+   ],
+   "story": "freeze",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     120,
+     "Strong technical fit confirmed and security requirements validated."
+    ],
+    [
+     84,
+     "Verbal commit from the champion; contract in legal review."
+    ],
+    [
+     47,
+     "Champion told us the company announced a company-wide spending freeze; all new vendor contracts are on hold."
+    ]
+   ],
+   "notes": [
+    [
+     84,
+     "Champion: 'This has nothing to do with your product.'"
+    ]
+   ],
+   "close_reason_raw": "Lost - buyer-side spending freeze, unrelated to product fit."
+  },
+  {
+   "name": "Keel Industrial - Operations Platform",
+   "company_name": "Keel Industrial",
+   "domain": "keelindustrial-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "300",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 82000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 124,
+   "closed_days_ago": 6,
+   "contacts": [
+    [
+     "Irene Mensah",
+     "Head of Operations",
+     "champion",
+     124
+    ],
+    [
+     "Kenji Patel",
+     "CFO",
+     "decision_maker",
+     119
+    ],
+    [
+     "Kenji Larsen",
+     "Operations Manager",
+     "end_user",
+     114
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     95,
+     "Discovery call. The economic decision maker engaged from the first call and set clear success criteria."
+    ],
+    [
+     65,
+     "Demo addressed every stated requirement."
+    ],
+    [
+     36,
+     "Proposal accepted after one round of review."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Anvil Ridge Metals - Growth Plan",
+   "company_name": "Anvil Ridge Metals",
+   "domain": "anvilridgemetals-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "860",
+   "city": "Dublin",
+   "country": "IE",
+   "amount": 33000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 101,
+   "closed_days_ago": 4,
+   "contacts": [
+    [
+     "Felix Kowalski",
+     "Head of Operations",
+     "champion",
+     101
+    ],
+    [
+     "Owen Bauer",
+     "CFO",
+     "decision_maker",
+     96
+    ],
+    [
+     "Marcus Moreau",
+     "Operations Manager",
+     "end_user",
+     91
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     77,
+     "Discovery with a strong internal champion who ran a structured evaluation."
+    ],
+    [
+     53,
+     "Champion brought the decision maker in early, before the proposal."
+    ],
+    [
+     28,
+     "Clear ROI case accepted by the CFO."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Sterling Tooling - Growth Plan",
+   "company_name": "Sterling Tooling",
+   "domain": "sterlingtooling-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "410",
+   "city": "Denver",
+   "country": "US",
+   "amount": 36000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 103,
+   "closed_days_ago": 7,
+   "contacts": [
+    [
+     "Elena Okafor",
+     "Head of Operations",
+     "champion",
+     103
+    ],
+    [
+     "Felix Kowalski",
+     "CFO",
+     "decision_maker",
+     98
+    ],
+    [
+     "Clara Kim",
+     "Operations Manager",
+     "end_user",
+     93
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     79,
+     "Buyer surfaced budget early in discovery."
+    ],
+    [
+     55,
+     "We matched a modular package to their actual need instead of the full suite."
+    ],
+    [
+     31,
+     "Signed on a quarterly term."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Brightcast Plastics - Analytics Suite",
+   "company_name": "Brightcast Plastics",
+   "domain": "brightcastplastics-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "250",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 78000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 84,
+   "closed_days_ago": 38,
+   "contacts": [
+    [
+     "Ravi Moreau",
+     "Head of Operations",
+     "champion",
+     84
+    ],
+    [
+     "Samuel Chen",
+     "CFO",
+     "decision_maker",
+     79
+    ],
+    [
+     "Clara Keller",
+     "Operations Manager",
+     "end_user",
+     74
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     73,
+     "Great demo; proposal sent same day, which kept buying momentum."
+    ],
+    [
+     61,
+     "Decision maker engaged within two weeks."
+    ],
+    [
+     50,
+     "Closed on schedule."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Vector Machining - Analytics Suite",
+   "company_name": "Vector Machining",
+   "domain": "vectormachining-sample.com",
+   "industry": "Manufacturing",
+   "segment": "mid_market",
+   "employee_count": "350",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 81000,
+   "currency": "USD",
+   "outcome": "open",
+   "opened_days_ago": 78,
+   "closed_days_ago": null,
+   "contacts": [
+    [
+     "Daniel Sato",
+     "Head of Operations",
+     "champion",
+     78
+    ],
+    [
+     "Tom Sato",
+     "CFO",
+     "decision_maker",
+     73
+    ],
+    [
+     "Marcus Patel",
+     "Operations Manager",
+     "end_user",
+     68
+    ]
+   ],
+   "story": "open",
+   "stage_reached": 2,
+   "meetings": [
+    [
+     40,
+     "Discovery done; buyer asked whether we offer a smaller module instead of the full suite."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": null
+  },
+  {
+   "name": "Byteforge Labs - Starter Plan",
+   "company_name": "Byteforge Labs",
+   "domain": "byteforgelabs-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "50",
+   "city": "Denver",
+   "country": "US",
+   "amount": 23000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 116,
+   "closed_days_ago": 54,
+   "contacts": [
+    [
+     "Jonah Chen",
+     "Founder",
+     "decision_maker",
+     116
+    ],
+    [
+     "Nina Keller",
+     "Office Manager",
+     "end_user",
+     111
+    ]
+   ],
+   "story": "proposal_delay",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     101,
+     "Great demo, buyer ready to move and asked for a proposal the same week."
+    ],
+    [
+     85,
+     "Proposal sent 8 days late because of an internal approval backlog on our side."
+    ],
+    [
+     70,
+     "Buyer signed with another vendor in the meantime."
+    ]
+   ],
+   "notes": [
+    [
+     85,
+     "Internal note: proposal was stuck in manager review past the SLA."
+    ]
+   ],
+   "close_reason_raw": "Lost - proposal delayed by internal approval backlog; buyer moved on."
+  },
+  {
+   "name": "Pixelridge - Starter Plan",
+   "company_name": "Pixelridge",
+   "domain": "pixelridge-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 10000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 119,
+   "closed_days_ago": 20,
+   "contacts": [
+    [
+     "Hannah Moreau",
+     "Founder",
+     "decision_maker",
+     119
+    ],
+    [
+     "Nina Kim",
+     "Office Manager",
+     "end_user",
+     114
+    ]
+   ],
+   "story": "proposal_delay",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     94,
+     "Great demo, buyer ready to move and asked for a proposal the same week."
+    ],
+    [
+     70,
+     "Proposal sent 8 days late because of an internal approval backlog on our side."
+    ],
+    [
+     45,
+     "Buyer signed with another vendor in the meantime."
+    ]
+   ],
+   "notes": [
+    [
+     70,
+     "Internal note: proposal was stuck in manager review past the SLA."
+    ]
+   ],
+   "close_reason_raw": "Lost - proposal delayed by internal approval backlog; buyer moved on."
+  },
+  {
+   "name": "Cloudnine Devices - Starter Plan",
+   "company_name": "Cloudnine Devices",
+   "domain": "cloudninedevices-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 19500,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 119,
+   "closed_days_ago": 22,
+   "contacts": [
+    [
+     "Ethan Chen",
+     "Founder",
+     "decision_maker",
+     119
+    ],
+    [
+     "Andre Nguyen",
+     "Office Manager",
+     "end_user",
+     114
+    ]
+   ],
+   "story": "pricing",
+   "stage_reached": 3,
+   "meetings": [
+    [
+     95,
+     "Discovery call, buyer liked the product and the onboarding story."
+    ],
+    [
+     71,
+     "Proposal walkthrough. Buyer said our list price is 35% above their budget for this year."
+    ],
+    [
+     46,
+     "We could not offer a smaller tier; buyer picked a cheaper tool."
+    ]
+   ],
+   "notes": [
+    [
+     71,
+     "Budget was never discussed in discovery."
+    ]
+   ],
+   "close_reason_raw": "Lost - price above the buyer's budget."
+  },
+  {
+   "name": "Signalworks - Starter Plan",
+   "company_name": "Signalworks",
+   "domain": "signalworks-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 11000,
+   "currency": "USD",
+   "outcome": "lost",
+   "opened_days_ago": 127,
+   "closed_days_ago": 32,
+   "contacts": [
+    [
+     "Tom Varga",
+     "Founder",
+     "decision_maker",
+     127
+    ],
+    [
+     "Leah Lindqvist",
+     "Office Manager",
+     "end_user",
+     122
+    ]
+   ],
+   "story": "dark",
+   "stage_reached": 1,
+   "meetings": [
+    [
+     95,
+     "Single discovery call, buyer engaged."
+    ],
+    [
+     64,
+     "Demo delivered; buyer stopped replying to follow-ups."
+    ]
+   ],
+   "notes": [
+    [
+     80,
+     "Rep note: deal went dark after the demo, no response to four follow-up emails. Reason unclear."
+    ]
+   ],
+   "close_reason_raw": "Lost - buyer went unresponsive, no reason given."
+  },
+  {
+   "name": "Lumen Circuit - Essentials",
+   "company_name": "Lumen Circuit",
+   "domain": "lumencircuit-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Atlanta",
+   "country": "US",
+   "amount": 13000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 155,
+   "closed_days_ago": 29,
+   "contacts": [
+    [
+     "Clara Hughes",
+     "Founder",
+     "decision_maker",
+     155
+    ],
+    [
+     "Priya Kim",
+     "Office Manager",
+     "end_user",
+     150
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     124,
+     "Discovery call. The economic decision maker engaged from the first call and set clear success criteria."
+    ],
+    [
+     92,
+     "Demo addressed every stated requirement."
+    ],
+    [
+     61,
+     "Proposal accepted after one round of review."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Kitebase - Starter Plan",
+   "company_name": "Kitebase",
+   "domain": "kitebase-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "50",
+   "city": "Toronto",
+   "country": "CA",
+   "amount": 16000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 152,
+   "closed_days_ago": 37,
+   "contacts": [
+    [
+     "Mei Kowalski",
+     "Founder",
+     "decision_maker",
+     152
+    ],
+    [
+     "Elena Patel",
+     "Office Manager",
+     "end_user",
+     147
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     123,
+     "Discovery with a strong internal champion who ran a structured evaluation."
+    ],
+    [
+     95,
+     "Champion brought the decision maker in early, before the proposal."
+    ],
+    [
+     66,
+     "Clear ROI case accepted by the CFO."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Nodewise - Starter Plan",
+   "company_name": "Nodewise",
+   "domain": "nodewise-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "40",
+   "city": "Boston",
+   "country": "US",
+   "amount": 19000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 122,
+   "closed_days_ago": 5,
+   "contacts": [
+    [
+     "Victor Tanaka",
+     "Founder",
+     "decision_maker",
+     122
+    ],
+    [
+     "Jonah Fischer",
+     "Office Manager",
+     "end_user",
+     117
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     93,
+     "Buyer surfaced budget early in discovery."
+    ],
+    [
+     64,
+     "We matched a modular package to their actual need instead of the full suite."
+    ],
+    [
+     34,
+     "Signed on a quarterly term."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  },
+  {
+   "name": "Sparkline Studio - Starter Plan",
+   "company_name": "Sparkline Studio",
+   "domain": "sparklinestudio-sample.com",
+   "industry": "Technology",
+   "segment": "smb",
+   "employee_count": "30",
+   "city": "Charlotte",
+   "country": "US",
+   "amount": 16000,
+   "currency": "USD",
+   "outcome": "won",
+   "opened_days_ago": 148,
+   "closed_days_ago": 27,
+   "contacts": [
+    [
+     "Clara Tanaka",
+     "Founder",
+     "decision_maker",
+     148
+    ],
+    [
+     "Aisha Walsh",
+     "Office Manager",
+     "end_user",
+     143
+    ]
+   ],
+   "story": "won",
+   "stage_reached": 4,
+   "meetings": [
+    [
+     118,
+     "Great demo; proposal sent same day, which kept buying momentum."
+    ],
+    [
+     88,
+     "Decision maker engaged within two weeks."
+    ],
+    [
+     57,
+     "Closed on schedule."
+    ]
+   ],
+   "notes": [],
+   "close_reason_raw": "Won"
+  }
+ ]
+}

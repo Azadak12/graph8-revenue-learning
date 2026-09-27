@@ -7,6 +7,8 @@ export interface Graph8Provider {
   getDealBundle(graph8DealId: string): Promise<G8DealBundle>;
   listClosedDeals(): Promise<G8Deal[]>;
   listActiveDeals(): Promise<G8Deal[]>;
+  /** Lists deal ids with their outcome only (no per-deal lookups). */
+  listDealRefs?(): Promise<Array<{ id: string; outcome: string }>>;
   /** Records the outcome Graph8 listed a deal under, for later bundle fetches. */
   rememberOutcome?(graph8DealId: string, outcome: string): void;
   createTask(args: {

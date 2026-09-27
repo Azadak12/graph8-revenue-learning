@@ -1,6 +1,6 @@
 /** Ported from backend/app/services/warnings/engine.py */
 import { prisma } from "../../db";
-import type { Pattern } from "@prisma/client";
+import type { Deal, Pattern } from "@prisma/client";
 import type { Graph8Provider } from "../graph8/base";
 import { syncDeal } from "../graph8/sync";
 
@@ -18,16 +18,30 @@ function patternMatchesDeal(pattern: Pattern, industry: string, segment: string)
   return segDef.segment === segment;
 }
 
-export async function refreshFutureWarnings(args: { organizationId: string; provider: Graph8Provider }) {
-  const { organizationId, provider } = args;
-  const activeG8Deals = await provider.listActiveDeals();
+export async function refreshFutureWarnings(args: {
+  organizationId: string;
+  provider: Graph8Provider;
+  /** Use the open deals already synced to the database instead of re-fetching them. */
+  useStoredOpenDeals?: boolean;
+}) {
+  const { organizationId, provider, useStoredOpenDeals } = args;
   const patterns = await prisma.pattern.findMany({
     where: { organizationId, status: "active", patternStrength: { in: QUALIFYING_STRENGTHS as any } },
   });
 
+  const openDeals: Array<{ deal: Deal; requirements: string[] }> = [];
+  if (useStoredOpenDeals) {
+    const stored = await prisma.deal.findMany({ where: { organizationId, outcome: "open" } });
+    for (const deal of stored) openDeals.push({ deal, requirements: [] });
+  } else {
+    for (const g8Deal of await provider.listActiveDeals()) {
+      const { deal, bundle } = await syncDeal({ organizationId, provider, graph8DealId: g8Deal.externalId });
+      openDeals.push({ deal, requirements: bundle.requirements });
+    }
+  }
+
   const created = [];
-  for (const g8Deal of activeG8Deals) {
-    const { deal, bundle } = await syncDeal({ organizationId, provider, graph8DealId: g8Deal.externalId });
+  for (const { deal, requirements } of openDeals) {
 
     for (const pattern of patterns) {
       if (!patternMatchesDeal(pattern, deal.industry, deal.segment)) continue;
@@ -37,7 +51,7 @@ export async function refreshFutureWarnings(args: { organizationId: string; prov
       const resolvedKeywords = RESOLVED_IF_REQUIREMENT_MENTIONS[bucketKey];
       if (
         resolvedKeywords &&
-        bundle.requirements.some((r) => resolvedKeywords.some((kw) => r.toLowerCase().includes(kw)))
+        requirements.some((r) => resolvedKeywords.some((kw) => r.toLowerCase().includes(kw)))
       ) {
         continue;
       }
