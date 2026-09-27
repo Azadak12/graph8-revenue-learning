@@ -16,6 +16,7 @@ export function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [restoring, setRestoring] = useState(false);
 
   function load() {
     api.get<ConnectionInfo>("/api/settings/graph8-connection").then(setConnection);
@@ -49,6 +50,20 @@ export function SettingsPage() {
       setSyncMessage(err instanceof Error ? err.message : "Sync failed.");
     } finally {
       setSyncing(false);
+    }
+  }
+
+  async function restoreDemo() {
+    setRestoring(true);
+    setSyncMessage(null);
+    try {
+      const res = await api.post<{ deals: number }>("/api/settings/demo-restore");
+      setSyncMessage(`Demo data restored: ${res.deals} sample deals loaded and analyzed.`);
+      load();
+    } catch (err) {
+      setSyncMessage(err instanceof Error ? err.message : "Restore failed.");
+    } finally {
+      setRestoring(false);
     }
   }
 
@@ -101,6 +116,13 @@ export function SettingsPage() {
             >
               {syncing ? "Syncing... this can take a minute" : "Sync deals from Graph8"}
             </button>
+            <button
+              onClick={restoreDemo}
+              disabled={restoring || syncing}
+              className="ml-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              {restoring ? "Restoring... up to a minute" : "Switch back to demo data"}
+            </button>
             {syncMessage && <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{syncMessage}</p>}
           </div>
         )}
@@ -109,6 +131,16 @@ export function SettingsPage() {
       {connection?.mode !== "live" && (
         <>
           <SectionLabel>Demo</SectionLabel>
+          <div className="mb-4">
+            <button
+              onClick={restoreDemo}
+              disabled={restoring}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              {restoring ? "Restoring... up to a minute" : "Reset demo data"}
+            </button>
+            {syncMessage && <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{syncMessage}</p>}
+          </div>
           <DemoConsole />
         </>
       )}
