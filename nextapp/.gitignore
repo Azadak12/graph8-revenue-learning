@@ -5,3 +5,4 @@ node_modules
 next-env.d.ts
 graph8-api-shape.json
 *.tsbuildinfo
+graph8-seed-report.json

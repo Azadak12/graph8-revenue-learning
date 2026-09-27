@@ -29,7 +29,7 @@ export class DeterministicDemoExtractor implements DealExtractor {
   modelIdentifier = "deterministic-demo-v1";
 
   async extract(bundle: DealEvidenceBundle, graph8DealId?: string | null): Promise<DealAnalysisExtraction> {
-    const gt = groundTruthFor(graph8DealId || "");
+    const gt = groundTruthFor(graph8DealId || "", bundle.deal_context.deal_name);
     if (!gt) {
       return {
         outcome: bundle.deal_context.outcome,

@@ -7,6 +7,7 @@ const MAX_LIST_ITEMS = 15;
 
 export interface DealEvidenceBundle {
   deal_context: {
+    deal_name: string;
     company_name: string;
     industry: string;
     segment: string;
@@ -67,6 +68,7 @@ export function buildEvidenceBundle(bundle: G8DealBundle): DealEvidenceBundle {
 
   return {
     deal_context: {
+      deal_name: deal.name,
       company_name: deal.companyName,
       industry: deal.industry,
       segment: deal.segment,

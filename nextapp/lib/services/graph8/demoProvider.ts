@@ -113,7 +113,10 @@ export class DemoGraph8Provider implements Graph8Provider {
   }
 }
 
-export function groundTruthFor(externalId: string): RawDemoDeal["ground_truth"] | undefined {
-  const raw = [...CLOSED_DEALS, ...ACTIVE_DEALS].find((d) => d.external_id === externalId);
+export function groundTruthFor(externalId: string, dealName?: string | null): RawDemoDeal["ground_truth"] | undefined {
+  const deals = [...CLOSED_DEALS, ...ACTIVE_DEALS];
+  // Sample deals loaded into a Graph8 workspace by scripts/graph8-seed.mjs come
+  // back with Graph8's ids, so also match them by their unique deal name.
+  const raw = deals.find((d) => d.external_id === externalId) || (dealName ? deals.find((d) => d.name === dealName) : undefined);
   return raw?.ground_truth;
 }
