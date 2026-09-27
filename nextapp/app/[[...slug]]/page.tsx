@@ -1,17 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { BrowserRouter } from "react-router-dom";
 
 // The whole product UI is an unmodified client-rendered SPA (react-router-dom
-// handles every route below this catch-all). Loaded with ssr:false because it
-// reads localStorage and uses browser-only APIs.
-const App = dynamic(() => import("../../src/App"), { ssr: false });
+// handles every route below this catch-all). The router must live inside the
+// ssr:false import: BrowserRouter touches `document` during render.
+const ClientRoot = dynamic(() => import("../../src/ClientRoot"), { ssr: false });
 
 export default function CatchAllPage() {
-  return (
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  );
+  return <ClientRoot />;
 }
