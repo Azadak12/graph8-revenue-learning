@@ -32,6 +32,9 @@ export function cleanApiKey(raw: string): string {
 export class LiveGraph8Provider implements Graph8Provider {
   mode = "live";
   private apiKey: string;
+  // Outcome Graph8 reported for each deal in the won/lost/open list calls;
+  // single-deal payloads may not carry it.
+  private knownOutcomes = new Map<string, string>();
   private baseUrl: string;
 
   constructor(apiKey: string, baseUrl?: string) {
@@ -76,7 +79,7 @@ export class LiveGraph8Provider implements Graph8Provider {
     const stageLabel = String(payload.stage_name || payload.stage || "");
     let outcome: string;
     if (outcomeHint) outcome = outcomeHint;
-    else if (["won", "lost", "open"].includes(payload.outcome)) outcome = payload.outcome;
+    else if (/won|lost|open/i.test(String(payload.outcome ?? ""))) outcome = String(payload.outcome).toLowerCase().match(/won|lost|open/)![0];
     else if (payload.is_closed_won === true || /closed[ _-]?won/i.test(stageLabel)) outcome = "won";
     else if (payload.is_closed_lost === true || /closed[ _-]?lost/i.test(stageLabel)) outcome = "lost";
     else if (closedLostReason) outcome = "lost";
@@ -104,7 +107,7 @@ export class LiveGraph8Provider implements Graph8Provider {
 
   async getDealBundle(graph8DealId: string): Promise<G8DealBundle> {
     const dealPayload = (await this.get(`/deals/${graph8DealId}`)).data;
-    const deal = await this.parseDeal(dealPayload);
+    const deal = await this.parseDeal(dealPayload, this.knownOutcomes.get(String(graph8DealId)));
 
     const contactsData = (await this.get(`/deals/${graph8DealId}/contacts`)).data || {};
     const contacts: G8Contact[] = (contactsData.contacts || []).map((c: any) => ({
@@ -165,7 +168,9 @@ export class LiveGraph8Provider implements Graph8Provider {
       const params: Record<string, string | number> = { outcome, limit: 100 };
       if (cursor) params.cursor = cursor;
       const payload = await this.get("/deals", params);
-      for (const d of payload.data || []) deals.push(await this.parseDeal(d, outcome));
+      const page: any[] = payload.data || [];
+      for (const d of page) this.knownOutcomes.set(String(d.id), outcome);
+      deals.push(...(await Promise.all(page.map((d) => this.parseDeal(d, outcome)))));
       const pagination = payload.pagination || {};
       if (!pagination.has_next) break;
       cursor = pagination.next_cursor;

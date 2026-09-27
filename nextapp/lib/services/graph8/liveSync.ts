@@ -43,16 +43,22 @@ export async function syncOrgFromGraph8(organizationId: string, provider: Graph8
 
   await clearOrgDealData(organizationId);
 
+  // Analyze a few deals at a time so a full sync fits in one serverless request.
   let analyzed = 0;
   let failed = 0;
-  for (const g8Deal of closed) {
-    try {
-      await runInvestigation({ organizationId, provider, graph8DealId: g8Deal.externalId, skipRefresh: true });
-      analyzed++;
-    } catch (err) {
-      failed++;
-      logger.exception("live_sync_deal_failed", err, { graph8DealId: g8Deal.externalId });
-    }
+  const CONCURRENCY = 5;
+  for (let i = 0; i < closed.length; i += CONCURRENCY) {
+    await Promise.all(
+      closed.slice(i, i + CONCURRENCY).map(async (g8Deal) => {
+        try {
+          await runInvestigation({ organizationId, provider, graph8DealId: g8Deal.externalId, skipRefresh: true });
+          analyzed++;
+        } catch (err) {
+          failed++;
+          logger.exception("live_sync_deal_failed", err, { graph8DealId: g8Deal.externalId });
+        }
+      })
+    );
   }
 
   const segments = await prisma.deal.findMany({
