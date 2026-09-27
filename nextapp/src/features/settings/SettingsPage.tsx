@@ -66,6 +66,19 @@ export function SettingsPage() {
     }
   }
 
+  async function rebuildLearnings() {
+    setSyncing(true);
+    setSyncMessage("Rebuilding learnings and recommendations from the imported deals...");
+    try {
+      const fin = await api.post<{ patterns: number; recommendations: number; warnings: number }>("/api/settings/graph8-sync", { step: "finish" });
+      setSyncMessage(`Rebuilt from the imported deals: ${fin.patterns} learnings, ${fin.recommendations} recommendations, ${fin.warnings} open-deal warnings.`);
+    } catch (err) {
+      setSyncMessage(err instanceof Error ? err.message : "Rebuild failed.");
+    } finally {
+      setSyncing(false);
+    }
+  }
+
   async function restoreDemo() {
     setRestoring(true);
     setSyncMessage(null);
@@ -128,6 +141,13 @@ export function SettingsPage() {
               className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
             >
               {syncing ? "Syncing... this can take a minute" : "Sync deals from Graph8"}
+            </button>
+            <button
+              onClick={rebuildLearnings}
+              disabled={syncing}
+              className="ml-2 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            >
+              Rebuild learnings & recommendations
             </button>
             <button
               onClick={restoreDemo}

@@ -23,8 +23,11 @@ export async function runInvestigation(args: {
   provider: Graph8Provider;
   graph8DealId: string;
   skipRefresh?: boolean;
+  /** Bulk live sync passes false: the deal is flagged in the app instead of
+   * writing a clarification task into Graph8 without anyone approving it. */
+  createGraph8Tasks?: boolean;
 }): Promise<DealAnalysis | null> {
-  const { organizationId, provider, graph8DealId, skipRefresh } = args;
+  const { organizationId, provider, graph8DealId, skipRefresh, createGraph8Tasks = true } = args;
   const { deal, bundle: g8Bundle } = await syncDeal({ organizationId, provider, graph8DealId });
 
   if (deal.outcome === "open") {
@@ -127,7 +130,7 @@ export async function runInvestigation(args: {
     analysis = await prisma.dealAnalysis.update({ where: { id: analysis.id }, data: { primaryFactorId } });
   }
 
-  if (analysis.status === "needs_clarification") {
+  if (analysis.status === "needs_clarification" && createGraph8Tasks) {
     try {
       const taskId = await createClarificationTask(provider, deal, analysis);
       await prisma.auditLog.create({
