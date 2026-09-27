@@ -103,6 +103,7 @@ if (pipelines.length === 0) {
 const pipeline = pipelines.find((p) => p.is_default) || pipelines[0] || null;
 const stages = pipeline ? asList(pipeline.stages || pipeline.deal_stages || []) : [];
 const stageName = (s) => String(s?.name || s?.label || s?.title || "");
+const stageId = (s) => s?.id ?? s?.stage_id ?? s?.uuid ?? s?.value ?? s?.key;
 const stageByName = (re) => stages.find((s) => re.test(stageName(s)));
 const wonStage = stages.find((s) => s.is_won || s.is_closed_won || s.type === "won" || s.outcome === "won") || stageByName(/won/i);
 const lostStage = stages.find((s) => s.is_lost || s.is_closed_lost || s.type === "lost" || s.outcome === "lost") || stageByName(/lost/i);
@@ -186,33 +187,65 @@ function dealStory(d) {
   return lines;
 }
 
-async function markClosed(dealId, d) {
+function outcomeOf(deal, targetStageId) {
+  if (!deal || typeof deal !== "object") return null;
+  if (deal.is_closed_won === true || deal.is_won === true) return "won";
+  if (deal.is_closed_lost === true || deal.is_lost === true) return "lost";
+  const vals = [deal.outcome, deal.status, deal.deal_status, deal.state, deal.stage_type, deal.stage_name,
+    deal.stage?.type, deal.stage?.name, deal.stage?.outcome, typeof deal.stage === "string" ? deal.stage : null];
+  for (const v of vals) {
+    const t = String(v ?? "").toLowerCase();
+    if (/won/.test(t)) return "won";
+    if (/lost/.test(t)) return "lost";
+  }
+  const current = deal.stage_id ?? deal.stage?.id;
+  if (targetStageId != null && current != null && String(current) === String(targetStageId)) return "moved";
+  return null;
+}
+
+let closeDiagnosticsShown = false;
+async function markClosed(dealId, d, row) {
   const reason = closeReasonFor(d);
   const closeDate = daysAgo(d.closed_days_ago ?? 1);
   const stage = d.outcome === "won" ? wonStage : lostStage;
-  const common = {
-    outcome: d.outcome, status: d.outcome, is_closed_won: d.outcome === "won", close_date: closeDate,
-    close_reason_id: reason?.id, reason_id: reason?.id, close_reason: reason?.label || d.close_reason_raw,
-    closed_lost_reason: d.outcome === "lost" ? d.close_reason_raw || reason?.label : undefined,
+  const sid = stageId(stage);
+  const reasonFields = {
+    close_reason_id: reason?.id,
+    closed_lost_reason: d.outcome === "lost" ? reason?.label || d.close_reason_raw : undefined,
     closed_won_reason: d.outcome === "won" ? reason?.label : undefined,
-    stage_id: stage?.id,
   };
   const attempts = [];
+  if (sid != null) {
+    attempts.push(["PATCH", `/deals/${dealId}`, { stage_id: sid, close_date: closeDate, ...reasonFields }]);
+    attempts.push(["PATCH", `/deals/${dealId}`, { stage_id: sid, close_date: closeDate }]);
+    attempts.push(["PATCH", `/deals/${dealId}`, { stage_id: sid }]);
+    attempts.push(["POST", "/deals/bulk", { deal_ids: [String(dealId)], change: { stage_id: sid } }]);
+  }
   for (const p of closePaths) {
     const method = spec.paths[p]?.post || spec.paths["/api/v1" + p]?.post ? "POST" : spec.paths[p]?.put || spec.paths["/api/v1" + p]?.put ? "PUT" : "PATCH";
-    attempts.push([method, p.replace(/\{[^}]+\}/, dealId), common]);
+    attempts.push([method, p.replace(/\{[^}]+\}/, dealId), { outcome: d.outcome, close_date: closeDate, stage_id: sid, ...reasonFields }]);
   }
-  if (stage?.id) {
-    attempts.push(["PATCH", `/deals/${dealId}`, { stage_id: stage.id, close_date: closeDate }]);
-    attempts.push(["POST", "/deals/bulk", { deal_ids: [dealId], change: { stage_id: stage.id, close_date: `${closeDate}T00:00:00Z` } }]);
-  }
-  attempts.push(["PATCH", `/deals/${dealId}`, { close_date: closeDate }]);
+  const tried = [];
+  let check = null;
   for (const [m, p, b] of attempts) {
     const r = await call(m, p, b, { quiet: true });
+    tried.push(`${m} ${p.replace(String(dealId), "{id}")} -> ${r.status}${r.ok ? "" : " " + JSON.stringify(r.body).slice(0, 300)}`);
     if (!r.ok) continue;
-    const check = dataOf(await call("GET", `/deals/${dealId}`, undefined, { quiet: true })) || {};
-    const outcome = check.outcome || (check.is_closed_won ? "won" : check.is_closed_lost || check.closed_lost_reason ? "lost" : null);
-    if (outcome === d.outcome) return `${m} ${p.replace(dealId, "{id}")}`;
+    check = dataOf(await call("GET", `/deals/${dealId}`, undefined, { quiet: true })) || {};
+    const o = outcomeOf(check, sid);
+    if (o === d.outcome || o === "moved") return `${m} ${p.replace(String(dealId), "{id}")}`;
+  }
+  row.close_attempts = tried;
+  if (!closeDiagnosticsShown) {
+    closeDiagnosticsShown = true;
+    if (!check) check = dataOf(await call("GET", `/deals/${dealId}`, undefined, { quiet: true })) || {};
+    console.log(`\n   Could not mark "${d.name}" as ${d.outcome}. Details to send to Claude:`);
+    console.log(`   target stage: ${stageName(stage) || "NONE"} (id ${sid ?? "NONE"}) | stage keys: ${stage ? Object.keys(stage).join(",") : "-"}`);
+    for (const t of tried) console.log(`   ${t}`);
+    const pick = {};
+    for (const k of Object.keys(check)) if (/stage|outcome|status|won|lost|close|state|pipeline/i.test(k)) pick[k] = check[k];
+    console.log(`   deal now: ${JSON.stringify(pick).slice(0, 700)}`);
+    console.log(`   deal fields: ${Object.keys(check).join(", ").slice(0, 700)}\n`);
   }
   return null;
 }
@@ -223,6 +256,21 @@ for (const d of all) {
   const row = { name: d.name, outcome: d.outcome };
   results.push(row);
   const domain = `${slug(d.company_name)}.com`;
+
+  // Already created by an earlier run? Reuse it (no duplicates).
+  const found = asList(dataOf(await call("GET", `/deals?search=${encodeURIComponent(d.company_name)}&limit=20`, undefined, { quiet: true })));
+  const existing = found.find((x) => x?.name === d.name);
+  if (existing) {
+    row.deal_id = String(idOf(existing));
+    row.existing = true;
+    if (d.outcome === "won" || d.outcome === "lost") {
+      const now = outcomeOf(existing, stageId(d.outcome === "won" ? wonStage : lostStage));
+      row.closed_via = now === d.outcome || now === "moved" ? "already" : await markClosed(row.deal_id, d, row);
+    }
+    console.log(`   ok ${d.name} (${d.outcome}${d.outcome !== "open" ? row.closed_via ? ", closed" : ", NOT closed" : ""}) [already in Graph8]`);
+    save();
+    continue;
+  }
 
   // Company
   let companyId = null;
@@ -257,7 +305,7 @@ for (const d of all) {
   const firstStage = openStages.find((s) => stageName(s) === (d.stage_history?.at(-1)?.[0] || "")) || openStages[0];
   const dealBody = {
     name: d.name, company_id: companyId ? asInt(companyId) : undefined, amount: d.amount, currency: d.currency,
-    pipeline_id: pipeline?.id, stage_id: firstStage?.id, owner_id: ownerId || undefined,
+    pipeline_id: pipeline?.id ?? pipeline?.pipeline_id, stage_id: stageId(firstStage), owner_id: ownerId || undefined,
     contact_ids: contactIds.map((c) => c.id), allow_duplicate: false,
   };
   const variants = [
@@ -313,7 +361,7 @@ for (const d of all) {
 
   // Outcome
   if (d.outcome === "won" || d.outcome === "lost") {
-    row.closed_via = await markClosed(dealId, d);
+    row.closed_via = await markClosed(dealId, d, row);
   }
   console.log(`   ${row.deal_id ? "ok" : "x"} ${d.name} (${d.outcome}${d.outcome !== "open" ? row.closed_via ? ", closed" : ", NOT closed" : ""})`);
   save();
